@@ -1,0 +1,15 @@
+<nav class="top">
+    <h1>MetroDocu</h1>
+    <div class="search-container">
+        <form>
+            <input type="text" name="search" placeholder="Search">
+            <span class="material-icons search">search</span>
+        </form>
+    </div>
+    {{#if loggedIn}}
+        
+    {{^}}
+        <button class="primary" id="loginButton">Log in</button>
+        <button class="primary">Register</button>
+    {{/if}}
+</nav>

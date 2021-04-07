@@ -1,0 +1,133 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Ubuntu', sans-serif;
+    background-color: #F7F5FB;
+}
+
+nav.top {
+    min-height: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    background-color: #084887;
+}
+
+nav.top > h1 {
+    margin: 10px 15px;
+    color: white;
+}
+
+.search-container {
+    position: relative;
+    margin-left: auto;
+    margin-right: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.material-icons.search {
+    position: absolute;
+    right: 5px;
+    top: 20%;
+    color: #F58A07;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    padding: 8px;
+    border: 2px solid #F58A07;
+    border-radius: 5px;
+    font-family: inherit;
+}
+
+button.primary {
+    display: inline-block;
+    margin: 15px 5px;
+    padding: 10px;
+    min-width: 100px;
+    border-radius: 100px;
+    color: white;
+    background-color: #F58A07;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: block;
+    height: 60px;
+    width: 100%;
+    background-color: #084887;
+}
+
+footer > p {
+    color: white;
+    text-align: center;
+}
+
+.modal-container {
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-box {
+    min-height: 25%;
+    width: 30%;
+    background-color: #F7F5FB;
+    border-radius: 10px;
+}
+
+.modal-header {
+    padding: 5px 15px;
+    background-color: #084887;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+}
+
+.modal-header > h2 {
+    font-weight: 700;
+    color: white;
+}
+
+.modal-content {
+    padding: 15px 15px;
+}
+
+.modal-footer {
+    padding: 5px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.input-area {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px 0px;
+}
+
+.input-area > input {
+    margin-left: auto;
+}
+
+#login-error {
+    display: none;
+    padding: 5px;
+    color: #F9AB55;
+    font-weight: 700;
+    text-align: center;
+}
