@@ -1,4 +1,5 @@
 'use strict';
+const url = 'https://localhost:8000'; // change url when uploading to server
 
 const loginButton = document.getElementById("loginButton");
 loginButton.addEventListener("click", () => {
@@ -7,20 +8,33 @@ loginButton.addEventListener("click", () => {
 });
 
 const loginForm = document.getElementById("loginForm");
-loginForm.addEventListener("submit", async event => {
-    event.preventDefault();
-    const formData = new URLSearchParams(new FormData(event.target));
+loginForm.addEventListener("submit", async (evt) => {
+    evt.preventDefault();
+    const formData = serializeJson(loginForm);
+    console.log(formData);
     const loginError = document.getElementById("login-error");
+    const fetchOptions = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    };
     try {
-        const response = await fetch("/auth/login", {
-            method: "POST",
-            body: formData
-        });
+        const response = await fetch(url +"/auth/login", fetchOptions );
+        const json = await response.json();
+        console.log('login response', json);
         if (response.status === 401) {
             loginError.style.display = "block";
-        } 
+        }
         if (response.redirected) {
             window.location.href = response.url;
+        }
+        if (!json.user) {
+            alert(json.message);
+        } else {
+            // save token
+            sessionStorage.setItem('token', json.token);
         }
     } catch (error) {
         console.error(error);

@@ -6,7 +6,7 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
-router.post("/login", passport.authenticate("local", {successRedirect: "/"}));
+router.post('/login', authController.login);
 router.get("/logout", authController.log_out);
 
 module.exports = router;
