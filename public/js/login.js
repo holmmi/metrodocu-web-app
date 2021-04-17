@@ -1,26 +1,33 @@
 'use strict';
 
-const loginButton = document.getElementById("loginButton");
+const loginButton = document.getElementById("login-button");
 loginButton.addEventListener("click", () => {
     const modalContainer = document.querySelector(".modal-container");
     modalContainer.style.display = "flex";
 });
 
-const loginForm = document.getElementById("loginForm");
+const loginForm = document.getElementById("login-form");
 loginForm.addEventListener("submit", async event => {
     event.preventDefault();
-    const formData = new URLSearchParams(new FormData(event.target));
+    const formData = new FormData(event.target);
+    const json = {};
+    formData.forEach((value, key) => {
+        json[key] = value;
+    });
     const loginError = document.getElementById("login-error");
     try {
         const response = await fetch("/auth/login", {
             method: "POST",
-            body: formData
+            body: JSON.stringify(json),
+            headers: {
+                "Content-Type": "application/json"
+            }
         });
+        if (response.ok) {
+            location.reload();
+        }
         if (response.status === 401) {
             loginError.style.display = "block";
-        } 
-        if (response.redirected) {
-            window.location.href = response.url;
         }
     } catch (error) {
         console.error(error);
@@ -38,4 +45,9 @@ modalButtons[0].addEventListener("click", () => {
 modalButtons[1].addEventListener("click", () => {
     const modalContainer = document.querySelector(".modal-container");
     modalContainer.style.display = "none";
+});
+
+const registerButton = document.getElementById("register-button");
+registerButton.addEventListener("click", () => {
+    window.location.href = "/register";
 });

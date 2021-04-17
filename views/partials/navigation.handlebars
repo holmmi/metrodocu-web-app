@@ -1,5 +1,14 @@
 <nav class="top">
-    <h1>MetroDocu</h1>
+    <h1><a href="/">MetroDocu</a></h1>
+    <div class="link-container">
+        <span class="material-icons nav">perm_media</span>
+        <a href="/stories">Stories</a>
+    </div>
+    <div class="link-container">
+        <span class="material-icons nav">leaderboard</span>
+        <a href="/statistics">Statistics</a>
+    </div>
+    
     <div class="search-container">
         <form>
             <input type="text" name="search" placeholder="Search">
@@ -9,7 +18,7 @@
     {{#if loggedIn}}
         
     {{^}}
-        <button class="primary" id="loginButton">Log in</button>
-        <button class="primary">Register</button>
+        <button class="primary" id="login-button">Log in</button>
+        <button class="primary" id="register-button">Register</button>
     {{/if}}
 </nav>

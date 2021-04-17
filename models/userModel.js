@@ -1,31 +1,24 @@
 'use strict';
+const pool = require('../database/pool');
+const promisePool = pool.promise();
 
-const users = [
-    {
-        id: 1,
-        first_name: "Testi",
-        last_name: "Testaaja",
-        email: "test@example.com",
-        password: "Test123"
-    },
-    {
-        id: 2,
-        first_name: "Testi",
-        last_name: "Testeri",
-        email: "test@example.fi",
-        password: "Test1234"
-    }
-];
-
-const getUserByEmailAndPassword = (email, password) => {
-    return users.filter(user => user.email === email && user.password === password)[0];
+const addUser = async details => {
+    const [rows] = await promisePool.execute("INSERT INTO user (username, first_name, last_name, password) VALUES (?, ?, ?, ?)", details);
+    return rows;
 };
 
-const getUserById = id => {
-    return users.filter(user => user.id === id)[0];
+const getUserByUsername = async username => {
+    const [rows] = await promisePool.execute("SELECT * FROM user WHERE username = ?", [username]);
+    return rows[0];
+}
+
+const getUserById = async userId => {
+    const [rows] = await promisePool.execute("SELECT * FROM user WHERE user_id = ?", [userId])
+    return rows[0];
 }
 
 module.exports = {
-    getUserByEmailAndPassword,
+    addUser,
+    getUserByUsername,
     getUserById
 }
