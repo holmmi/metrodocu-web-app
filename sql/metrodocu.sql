@@ -15,7 +15,7 @@ CREATE TABLE user(
 ) WITH SYSTEM VERSIONING;
 
 CREATE TABLE group_detail(
-    group_id INT PRIMARY KEY AUTO_INCREMENT,
+    group_id INT PRIMARY KEY,
     group_name VARCHAR(40) NOT NULL
 );
 
@@ -28,14 +28,20 @@ CREATE TABLE user_group(
     FOREIGN KEY (user_id) REFERENCES user (user_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE story_visibility(
+    visibility_id INT PRIMARY KEY,
+    visibility_description VARCHAR(20) NOT NULL
+);
+
 CREATE TABLE story(
     story_id INT PRIMARY KEY AUTO_INCREMENT,
-    story_name VARCHAR(40) NOT NULL,
-    visibility VARCHAR(20) NOT NULL,
+    story_name VARCHAR(50) NOT NULL,
+    visibility_id INT NOT NULL,
     creation_date DATE NOT NULL DEFAULT CURDATE(),
     owner_id INT NOT NULL,
 
-    FOREIGN KEY (owner_id) REFERENCES user (user_id)
+    FOREIGN KEY (visibility_id) REFERENCES story_visibility (visibility_id) ON UPDATE CASCADE,
+    FOREIGN KEY (owner_id) REFERENCES user (user_id) ON UPDATE CASCADE
 );
 
 CREATE TABLE story_document(
@@ -81,13 +87,15 @@ CREATE TABLE story_comment(
 );
 
 CREATE INDEX idx_username ON user (username);
-CREATE INDEX idx_story_owner ON story (owner_id);
+CREATE INDEX idx_story ON story (owner_id, visibility_id);
 CREATE INDEX idx_member ON user_group (group_id, user_id);
 CREATE INDEX idx_story_document ON story_document (story_id);
 CREATE INDEX idx_story_share ON story_share (story_id, user_id);
 CREATE INDEX idx_story_like ON story_like (story_id, user_id);
 
-INSERT INTO group_detail(group_name) VALUES ('User'), ('Admin'); 
+INSERT INTO story_visibility VALUES (1, 'Private'), (2, 'Public'), (3, 'Owner only');
+
+INSERT INTO group_detail VALUES (1, 'User'), (2, 'Admin'); 
 
 DROP USER IF EXISTS 'metrodocu'@'localhost';
 CREATE USER 'metrodocu'@'localhost' IDENTIFIED BY 'changeme';
