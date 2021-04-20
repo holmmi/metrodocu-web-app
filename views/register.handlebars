@@ -1,0 +1,44 @@
+{{> navigation}}
+<main>
+    <div class="container">
+        <h1>Registration</h1>
+        <section class="register">
+            <div class="info-container">
+                <span class="material-icons info">info</span>
+                <div class="info-text">
+                    <p>Fill in the details below and click register to finish the registration.</p>
+                    <p>
+                        This site is protected by reCAPTCHA and the Google
+                        <a class="external-link" href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and
+                        <a class="external-link" href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
+                    </p>
+                </div>
+            </div>
+            <form id="registration-form">
+                <div class="input-container">
+                    <label for="fname">First name</label>
+                    <input type="text" id="fname" name="fname">
+                </div>
+                <div class="input-container">
+                    <label for="lname">Last name</label>
+                    <input type="text" id="lname" name="lname">
+                </div>
+                <div class="input-container">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username">
+                </div>
+                <div class="input-container">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password">
+                </div>
+                <div class="input-container">
+                    <input type="submit" value="Register">
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+{{> loginModal}}
+{{> footer}}
+<script src="https://www.google.com/recaptcha/api.js?render=6LeGkagaAAAAAC7HkQ4xcmoNENAP9CSyDM0c9gQ7"></script>
+<script src="./js/register.js"></script>

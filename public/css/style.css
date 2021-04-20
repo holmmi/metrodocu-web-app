@@ -18,6 +18,32 @@ nav.top > h1 {
     color: white;
 }
 
+nav.top > h1 a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+nav.top > .link-container {
+    display: flex;
+    align-items: flex-end;
+    margin: 10px 15px;
+} 
+
+.link-container a {
+    display: block;
+    text-decoration: none;
+    color: white;
+}
+
+.link-container a:hover {
+    text-decoration: underline;
+}
+
+.material-icons.nav {
+    margin-right: 5px;
+    color: #F58A07;
+}
+
 .search-container {
     position: relative;
     margin-left: auto;
@@ -36,8 +62,19 @@ nav.top > h1 {
 input[type="text"], input[type="email"], input[type="password"] {
     padding: 8px;
     border: 2px solid #F58A07;
-    border-radius: 5px;
     font-family: inherit;
+}
+
+input[type="submit"] {
+    padding: 10px;
+    min-width: 100px;
+    border: none;
+    border-radius: 100px;
+    color: white;
+    background-color: #F58A07;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
 }
 
 button.primary {
@@ -58,13 +95,15 @@ footer {
     position: absolute;
     bottom: 0;
     left: 0;
-    display: block;
-    height: 60px;
+    display: flex;
+    align-items: center;
+    min-height: 60px;
     width: 100%;
     background-color: #084887;
 }
 
 footer > p {
+    flex-basis: 100%;
     color: white;
     text-align: center;
 }
@@ -113,21 +152,78 @@ footer > p {
     justify-content: center;
 }
 
-.input-area {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 10px 0px;
-}
-
-.input-area > input {
-    margin-left: auto;
-}
-
 #login-error {
     display: none;
     padding: 5px;
     color: #F9AB55;
     font-weight: 700;
     text-align: center;
+}
+
+main {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.container {
+    margin: 20px 0px;
+    flex-basis: 80%;
+}
+
+section {
+    padding: 20px;
+    background-color: white;
+    min-height: 120px;
+}
+
+.input-container {
+    margin: 20px 0px;
+    display: flex;
+    flex-direction: row;
+}
+
+.input-container > label {
+    flex-basis: 25%;
+    align-self: center;
+}
+
+.info-container {
+    width: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 3px dashed #F58A07;
+    background-color: transparent;
+}
+
+.info-container > .info-text {
+    margin-left: 20px;
+}
+
+.info-container p {
+    color: #F58A07;
+    font-weight: 700;
+}
+
+span.material-icons.info {
+    display: block;
+    color: #F58A07;
+}
+
+.grecaptcha-badge { 
+    visibility: hidden;
+}
+
+a.external-link {
+    color: #909CC2;
+    text-decoration: none;
+}
+
+a.external-link:after {
+    margin-left: 4px;
+    font-family: "Material Icons";
+    content: "launch"
 }

@@ -1,48 +1,46 @@
 'use strict';
 
 const passport = require('passport');
-const bcrypt = require('bcryptjs');
 const LocalStrategy = require('passport-local').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+const fs = require('fs');
 const userModel = require('../models/userModel');
-const passportJWT = require('passport-jwt');
-const JWTStrategy = passportJWT.Strategy;
-const ExtractJWT = passportJWT.ExtractJwt;
+const bcrypt = require('bcrypt');
 
-passport.use(new LocalStrategy(
-    async (username, password, done) => {
-        const params = [username];
-        try {
-            const user = await userModel.getUserLogin(params);
-            console.log('Local strategy', user); // result is binary row
-            if (user === undefined) {
-                return done(null, false, {message: 'Incorrect credentials.'});
+passport.use(new LocalStrategy({session: false}, async (username, password, done) => {
+    try {
+        const user = await userModel.getUserByUsername(username);
+        if (user) {
+            if (await bcrypt.compare(password, user.password)) {
+                delete user.password;
+                return done(null, {...user});
             }
-            if(!await bcrypt.compare(password, user.password)) {
-                return done(null, false, {message: 'Incorrect credentials.'});
-            }
-            delete user.password; // poista salasana
-            return done(null, {...user}, {message: 'Logged In Successfully'}); // use spread syntax to create shallow copy to get rid of binary row type
-        } catch (err) {
-            return done(err);
         }
-    }));
+        return done(null, false);
+    } catch (error) {
+        console.error(error);
+        return done(error, false);
+    }
+}));
 
-// TODO: JWT strategy for handling bearer token
-passport.use(new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey: 'erghrtgrtegrtghrtgrth43534dfg',
-    },
-    async (jwtPayload, done) => {
+const cookieExtractor = req => {
+    return req && req.cookies ? req.cookies["token"] : null;
+};
 
-        //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
-        try {
-            const user = userModel.getUserById(jwtPayload.id);
-            console.log(user);
-            return done(null, user);
-        } catch (err) {
-            return done(err);
-        }
-    },
-));
+passport.use(new JwtStrategy({
+    secretOrKey: fs.readFileSync("secrets/jwt.crt"),
+    jwtFromRequest: cookieExtractor,
+    issuer: "Metropolia Ammattikorkeakoulu Oy",
+    algorithms: ["RS256"]
+}, async (jwtPayload, done) => {
+    try {
+        const user = await userModel.getUserById(jwtPayload.userId);
+        delete user.password;
+        return user ? done(null, {...user}) : done(null, false);
+    } catch (error) {
+        console.error(error);
+        return done(error, false);
+    }
+}));
 
 module.exports = passport;

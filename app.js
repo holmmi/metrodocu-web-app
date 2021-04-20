@@ -1,13 +1,13 @@
 'use strict';
 
 require('dotenv').config();
-const cors = require('cors');
 const express = require('express');
-const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const passport = require('./utils/pass');
 const exphbs  = require('express-handlebars');
-//const bodyParser = require('body-parser');
 
+const viewRoute = require('./routes/viewRoute');
+const authController= require('./controllers/authController');
 const authRoute = require('./routes/authRoute');
 
 const app = express();
@@ -16,27 +16,22 @@ const app = express();
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
-// Parse submitted form and JSON bodies
+// Parse JSON bodies
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-//app.use(bodyParser.urlencoded({ extended: true }));
-
-
-app.use(cors());
 
 // Serve static files
 app.use(express.static("./public/"));
 
-// Configuration of routes
-app.use("/auth", authRoute);
-//TODO: recognise if the user is logged in and render accordingly
-app.get("/", (req, res) => {
-    res.render("home", {
-        loggedIn: false
-    });
-});
-//const port = 3000;
-//app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+// Cookies and Passport initilization
+app.use(cookieParser());
+app.use(passport.initialize());
 
-//Enable HTTPS server
+// Try to make authentication based on JWT before any route
+app.use(authController.checkLogin);
+
+// Configuration of routes
+app.use(viewRoute);
+app.use("/auth", authRoute);
+
+// Enable HTTPS server
 require('./server')(process.env.HTTP_PORT, process.env.HTTPS_PORT, app);

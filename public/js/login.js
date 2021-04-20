@@ -1,40 +1,33 @@
 'use strict';
-const url = 'https://localhost:8000'; // change url when uploading to server
 
-const loginButton = document.getElementById("loginButton");
+const loginButton = document.getElementById("login-button");
 loginButton.addEventListener("click", () => {
     const modalContainer = document.querySelector(".modal-container");
     modalContainer.style.display = "flex";
 });
 
-const loginForm = document.getElementById("loginForm");
-loginForm.addEventListener("submit", async (evt) => {
-    evt.preventDefault();
-    const formData = serializeJson(loginForm);
-    console.log(formData);
+const loginForm = document.getElementById("login-form");
+loginForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const json = {};
+    formData.forEach((value, key) => {
+        json[key] = value;
+    });
     const loginError = document.getElementById("login-error");
-    const fetchOptions = {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-    };
     try {
-        const response = await fetch(url +"/auth/login", fetchOptions );
-        const json = await response.json();
-        console.log('login response', json);
+        const response = await fetch("/auth/login", {
+            method: "POST",
+            body: JSON.stringify(json),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        if (response.ok) {
+            location.reload();
+        }
         if (response.status === 401) {
             loginError.style.display = "block";
-        }
-        if (response.redirected) {
-            window.location.href = response.url;
-        }
-        if (!json.user) {
-            alert(json.message);
-        } else {
-            // save token
-            sessionStorage.setItem('token', json.token);
         }
     } catch (error) {
         console.error(error);
@@ -52,4 +45,9 @@ modalButtons[0].addEventListener("click", () => {
 modalButtons[1].addEventListener("click", () => {
     const modalContainer = document.querySelector(".modal-container");
     modalContainer.style.display = "none";
+});
+
+const registerButton = document.getElementById("register-button");
+registerButton.addEventListener("click", () => {
+    window.location.href = "/register";
 });
