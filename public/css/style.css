@@ -1,6 +1,10 @@
 body {
+    min-height: 100vh;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     font-family: 'Ubuntu', sans-serif;
     background-color: #F7F5FB;
 }
@@ -27,7 +31,15 @@ nav.top > .link-container {
     display: flex;
     align-items: flex-end;
     margin: 10px 15px;
-} 
+}
+
+nav.top.mobile {
+    display: none;
+}
+
+nav > .nav-button-container {
+    margin-right: 10px;
+}
 
 .link-container a {
     display: block;
@@ -44,12 +56,50 @@ nav.top > .link-container {
     color: #F58A07;
 }
 
+.material-icons.mobile-menu {
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+} 
+
+.mobile-menu-container {
+    display: none;
+    border-bottom: 2px solid #084887;
+    background-color: white;
+}
+
+.mobile-menu-container .material-icons {
+    color: #F58A07;
+}
+
+.mobile-menu-container ul {
+    margin: 10px 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.mobile-menu-container li {
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.mobile-menu-container a {
+    margin-left: 4px;
+    color: #084887;
+    text-decoration: none;
+}
+
+.mobile-menu-container a:hover {
+    text-decoration: underline;
+}
+
 .search-container {
     position: relative;
     margin-left: auto;
     margin-right: 10px;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .material-icons.search {
@@ -57,6 +107,7 @@ nav.top > .link-container {
     right: 5px;
     top: 20%;
     color: #F58A07;
+    cursor: pointer;
 }
 
 input[type="text"], input[type="email"], input[type="password"] {
@@ -91,14 +142,19 @@ button.primary {
     font-weight: 700;
 }
 
+button.dropdown::after {
+    margin-left: 4px;
+    font-family: 'Material Icons';
+    content: 'expand_more';
+}
+
 footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
+    margin-top: auto;
     min-height: 60px;
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     background-color: #084887;
 }
 
@@ -124,7 +180,7 @@ footer > p {
 
 .modal-box {
     min-height: 25%;
-    width: 30%;
+    min-width: 30%;
     background-color: #F7F5FB;
     border-radius: 10px;
 }
@@ -185,8 +241,21 @@ section {
 }
 
 .input-container > label {
+    margin-right: 20px;
     flex-basis: 25%;
     align-self: center;
+}
+
+.input-container > .form-error {
+    margin-left: 20px;
+    color: #F9AB55;
+    align-self: center;
+}
+
+.form-error::before {
+    font-family: 'Material Icons';
+    content: 'error';
+    margin-right: 4px;
 }
 
 .info-container {
@@ -224,6 +293,53 @@ a.external-link {
 
 a.external-link:after {
     margin-left: 4px;
-    font-family: "Material Icons";
-    content: "launch"
+    font-family: 'Material Icons';
+    content: 'launch'
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.dropdown-container {
+    display: block;
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    -webkit-box-shadow: 0px 5px 20px 5px rgba(0,0,0,0.5); 
+    box-shadow: 0px 5px 20px 5px rgba(0,0,0,0.5);
+}
+
+.dropdown-menu > .dropdown-item {
+    display: block;
+    padding: 10px;
+    color: black;
+    background-color: white;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #909CC2;
+}
+
+@media only screen and (max-width: 1024px) {
+    nav.top {
+        display: none;
+    }
+
+    nav.top.mobile {
+        display: flex;
+    }
+
+    .link-container {
+        margin-left: auto;
+        margin-right: 10px;
+    }
 }

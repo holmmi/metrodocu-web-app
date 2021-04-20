@@ -6,9 +6,10 @@ const cookieParser = require('cookie-parser');
 const passport = require('./utils/pass');
 const exphbs  = require('express-handlebars');
 
+const { checkLogin } = require('./controllers/authController');
 const viewRoute = require('./routes/viewRoute');
-const authController= require('./controllers/authController');
 const authRoute = require('./routes/authRoute');
+const storyRoute = require('./routes/storyRoute');
 
 const app = express();
 
@@ -27,11 +28,12 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 // Try to make authentication based on JWT before any route
-app.use(authController.checkLogin);
+app.use(checkLogin);
 
 // Configuration of routes
-app.use(viewRoute);
 app.use("/auth", authRoute);
+app.use("/story", storyRoute);
+app.use(viewRoute);
 
 // Enable HTTPS server
 require('./server')(process.env.HTTP_PORT, process.env.HTTPS_PORT, app);

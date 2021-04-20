@@ -16,6 +16,15 @@ const checkLogin = (req, res, next) => {
     })(req, res, next);
 };
 
+const check_availability = async (req, res) => {
+    try {
+        res.json({available: await userModel.checkIfUserExists(req.query.username ? req.query.username : "")});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Internal Server Error"});
+    }
+}
+
 const register = async (req, res, next) => {
     try {
         const {username, fname, lname} = req.body;
@@ -51,6 +60,7 @@ const log_out = (req, res) => {
 
 module.exports = {
     checkLogin,
+    check_availability,
     register,
     login,
     log_out

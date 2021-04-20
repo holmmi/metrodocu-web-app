@@ -17,8 +17,14 @@ const getUserById = async userId => {
     return rows[0];
 }
 
+const checkIfUserExists = async username => {
+    const [rows] = await promisePool.execute("SELECT COUNT(*) AS users FROM user WHERE username = ?", [username]);
+    return rows[0].users < 1;
+}
+
 module.exports = {
     addUser,
     getUserByUsername,
-    getUserById
+    getUserById,
+    checkIfUserExists
 }

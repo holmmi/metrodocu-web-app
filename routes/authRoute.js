@@ -10,5 +10,6 @@ const router = express.Router();
 router.post("/register", userValidator.validateRegistration, authController.register, authController.login);
 router.post("/login", authController.login);
 router.get("/logout", authController.log_out);
+router.get("/availability", authController.check_availability);
 
 module.exports = router;

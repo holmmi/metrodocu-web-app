@@ -1,8 +1,10 @@
 'use strict';
 
-const loginButton = document.getElementById("login-button");
-loginButton.addEventListener("click", () => {
-    const modalContainer = document.querySelector(".modal-container");
+const modalContainer = document.querySelector(".modal-container");
+document.getElementById("login-button").addEventListener("click", () => {
+    modalContainer.style.display = "flex";
+});
+document.getElementById("login-link").addEventListener("click", () => {
     modalContainer.style.display = "flex";
 });
 
