@@ -22,6 +22,7 @@ app.use(express.json());
 
 // Serve static files
 app.use(express.static("./public/"));
+app.use('/covers', express.static('covers'));
 
 // Cookies and Passport initilization
 app.use(cookieParser());
