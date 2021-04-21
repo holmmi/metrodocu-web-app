@@ -36,6 +36,8 @@ CREATE TABLE story_visibility(
 CREATE TABLE story(
     story_id INT PRIMARY KEY AUTO_INCREMENT,
     story_name VARCHAR(50) NOT NULL,
+    story_description VARCHAR(200),
+    cover_photo VARCHAR(60),
     visibility_id INT NOT NULL,
     creation_date DATE NOT NULL DEFAULT CURDATE(),
     owner_id INT NOT NULL,
