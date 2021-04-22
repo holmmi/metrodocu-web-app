@@ -47,10 +47,21 @@ const deleteStory = async (id) => {
         const [rows] = await promisePool.execute('DELETE FROM story WHERE story_id = ?', [id]);
         return rows.affectedRows === 1;
     } catch (e) {
-        console.error('deleteCat:', e.message);
-        throw new Error('deleteCat failed');
+        console.error('deleteStory:', e.message);
+        throw new Error('deleteStory failed');
     }
 };
+
+const likeStory = async (storyId, userId) => {
+    try {
+        console.log('likeStory (storyId, userId):',storyId,userId);
+        const [rows] = await promisePool.execute('INSERT INTO story_like (story_id, user_id) VALUES (?, ?)');
+        return rows;
+    } catch (e) {
+        console.log('likeStory: ', e.message);
+        throw new Error('likeStory failed');
+    }
+}
 
 module.exports = {
     getStoryVisibilities,
@@ -59,4 +70,5 @@ module.exports = {
     addStory,
     updateStory,
     deleteStory,
+    likeStory,
 };

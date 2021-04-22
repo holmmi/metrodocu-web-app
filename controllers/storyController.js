@@ -32,7 +32,7 @@ const addStory = async (req, res, next) => {
     try {
         console.log('storyController addStory', req.body, req.file);
         const {storyName, storyDesc, storyCover, storyVisibility, storyOwner} = req.body;
-        await storyModel.addStory([storyName, storyDesc, storyCover, storyVisibility, storyOwner])
+        await storyModel.addStory([storyName, storyDesc, storyCover, storyVisibility, storyOwner]);
         next();
     } catch (e) {
         res.status(400).json({error: e.message});
@@ -65,6 +65,10 @@ const deleteStory = async (req, res) => {
     res.json(deleteOk);
 };
 
+const likeStory = async (req, res, next) => {
+    await storyModel.likeStory(req.body.storyId, req.user.user_id);
+    next();
+}
 
 module.exports = {
     visibility,
@@ -74,4 +78,5 @@ module.exports = {
     make_cover,
     updateStory,
     deleteStory,
+    likeStory,
 };

@@ -35,6 +35,7 @@ router.post('/',
     testFile,
     storyController.make_cover,
     storyController.addStory);
+router.post('/like', storyController.likeStory);
 
 router.get('/:id', storyController.getStory);
 router.put('/:id', storyController.updateStory);
