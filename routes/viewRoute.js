@@ -21,6 +21,14 @@ router.get("/stories", (req, res) => {
     });
 })
 
+router.get("/stories/create-story", (req, res) => {
+    if (req.user) {
+        res.render("create-story", {loggedIn: true});
+    } else {
+        res.status(401).render("not-found");
+    }
+})
+
 router.use((req, res, next) => {
     res.status(404).render("not-found", {
         loggedIn: req.user ? true : false

@@ -71,8 +71,9 @@ CREATE TABLE story_share(
 CREATE TABLE story_like(
     like_id INT PRIMARY KEY AUTO_INCREMENT,
     story_id INT NOT NULL,
-    user_id INT NOT NULL UNIQUE,
+    user_id INT NOT NULL,
 
+    UNIQUE KEY (story_id, user_id),
     FOREIGN KEY (story_id) REFERENCES story (story_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES user (user_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -95,7 +96,7 @@ CREATE INDEX idx_story_document ON story_document (story_id);
 CREATE INDEX idx_story_share ON story_share (story_id, user_id);
 CREATE INDEX idx_story_like ON story_like (story_id, user_id);
 
-INSERT INTO story_visibility VALUES (1, 'Private'), (2, 'Public'), (3, 'Owner only');
+INSERT INTO story_visibility VALUES (1, 'Public'), (2, 'Only me'), (3, 'Shared users');
 
 INSERT INTO group_detail VALUES (1, 'User'), (2, 'Admin'); 
 

@@ -18,11 +18,11 @@ app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
 // Parse JSON bodies
-app.use(express.json());
+app.use(express.json({limit: "5MB"}));
 
 // Serve static files
 app.use(express.static("./public/"));
-app.use('/covers', express.static('covers'));
+app.use('/covers', express.static('./uploads/covers/'));
 
 // Cookies and Passport initilization
 app.use(cookieParser());
