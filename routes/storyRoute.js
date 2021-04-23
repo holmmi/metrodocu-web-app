@@ -26,6 +26,8 @@ const testFile = (req, res, next) => {
   }
 };
 
+
+
 const upload = multer({dest: 'uploads/', fileFilter});
 
 router.get('/', storyController.getStories);
@@ -38,6 +40,7 @@ router.post('/',
 router.post('/like', storyController.likeStory);
 
 router.get('/:id', storyController.getStory);
+router.get('/get/:id', storyController.getStory);
 router.put('/:id', storyController.updateStory);
 router.delete('/:id', storyController.deleteStory);
 

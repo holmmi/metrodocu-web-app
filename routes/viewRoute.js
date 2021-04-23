@@ -19,7 +19,7 @@ router.get("/stories", (req, res) => {
     res.render("stories", {
         loggedIn: req.user ? true : false
     });
-})
+});
 
 router.use((req, res, next) => {
     res.status(404).render("not-found", {

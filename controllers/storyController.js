@@ -17,10 +17,14 @@ const getStories = async (req, res) => {
     res.json(stories);
 };
 
-const getStory = async (req, res) => {
+const getStory = async (req, res, next) => {
     console.log('getStory: http get story with path param', req.params);
     const story = await storyModel.getStoryById(req.params.id);
-    res.json(story);
+    console.log("getStory story:", story);
+    res.render("story", {
+        story,
+        loggedIn: req.user ? true : false
+    });
 };
 
 const addStory = async (req, res, next) => {
@@ -66,8 +70,12 @@ const deleteStory = async (req, res) => {
 };
 
 const likeStory = async (req, res, next) => {
-    await storyModel.likeStory(req.body.storyId, req.user.user_id);
-    next();
+    if (req.user) {
+        await storyModel.likeStory(req.body.storyId, req.user.user_id);
+        next();
+    } else {
+        return res.status(401).json({error: "User not logged in"});
+    }
 }
 
 module.exports = {
