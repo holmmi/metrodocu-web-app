@@ -1,7 +1,7 @@
 'use strict';
 const storyModel = require('../models/storyModel');
-const {makeCover} = require('../utils/resize');
-const {validationResult} = require('express-validator');
+const { makeCover } = require('../utils/resize');
+const { v4 } = require('uuid');
 
 const visibility = async (req, res) => {
     try {
@@ -27,31 +27,26 @@ const getStory = async (req, res, next) => {
     });
 };
 
-const addStory = async (req, res, next) => {
-    // Finds the validation errors in this request and wraps them in an object with handy functions
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()});
-    }
-    try {
-        console.log('storyController addStory', req.body, req.file);
-        const {storyName, storyDesc, storyCover, storyVisibility, storyOwner} = req.body;
-        await storyModel.addStory([storyName, storyDesc, storyCover, storyVisibility, storyOwner]);
-        next();
-    } catch (e) {
-        res.status(400).json({error: e.message});
-    }
-};
-
-const make_cover = async (req, res, next) => {
-    try {
-        const cover = await makeCover(req.file.path, req.file.filename);
-        if (cover) {
-            next();
+const addStory = async (req, res) => {
+    if (req.user) {
+        try {
+            console.log('storyController addStory', req.body);
+            const {sname, sdescription, svisibility, files} = req.body;
+            // Decode Base64 string back to binary format
+            const buffer = Buffer.from(files[0].content, "base64");
+            const fileName = v4();
+            // Create a resized cover photo from an image data and save it
+            makeCover(buffer, fileName);
+            const insertId = await storyModel.addStory([sname, sdescription, fileName, svisibility, req.user.user_id]);
+            res.json({storyId: insertId});
+        } catch (e) {
+            console.error(e.message);
+            res.status(500).json({error: "Internal Server Error"});
         }
-    } catch (e) {
-        res.status(400).json({error: e.message});
+    } else {
+        res.status(401).json({error: "Unauthorized"});
     }
+
 };
 
 const updateStory = async (req, res) => {
@@ -83,7 +78,6 @@ module.exports = {
     getStories,
     getStory,
     addStory,
-    make_cover,
     updateStory,
     deleteStory,
     likeStory,

@@ -11,3 +11,15 @@ mobileMenu.addEventListener("click", () => {
         menuContainer.style.display = "none";
     }
 });
+
+window.addEventListener("dragover", (event) => {
+    if (event.target.id !== "drop-zone") {
+        event.preventDefault();
+    }
+},false);
+
+window.addEventListener("drop", (event) => {
+    if (event.target.id !== "drop-zone") {
+        event.preventDefault();
+    }
+},false);

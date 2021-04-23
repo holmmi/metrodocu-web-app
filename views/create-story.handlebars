@@ -1,0 +1,37 @@
+{{> navigation}}
+<main>
+    <div class="container">
+        <h1>Create a new story</h1>
+        <section>
+            <form id="create-story-form">
+                <div class="input-container">
+                    <label for="sname">Story name</label>
+                    <input name="sname" type="text">
+                </div>
+                <div class="input-container">
+                    <label for="sdescription">Story description</label>
+                    <textarea id="sdescription" name="sdescription" maxlength="200"></textarea>
+                </div>
+                <div class="input-container">
+                    <label for="svisibility">Visibility</label>
+                    <div id="svisibility" class="dropdown-container">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+                <div class="input-container">
+                    <label for="upload-section">Cover photo</label>
+                    <div class="upload-section">
+                        <input type="file" id="files" name="files" multiple>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <input type="submit" value="Create story">
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+<script src="/js/storyVisibility.js"></script>
+<script src="/js/createStory.js"></script>
+{{> loginModal}}
+{{> footer}}

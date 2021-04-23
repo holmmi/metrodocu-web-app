@@ -25,8 +25,8 @@ const getStoryById = async storyId => {
 };
 
 const addStory = async details => {
-    const [rows] = await promisePool.execute("INSERT INTO story (story_name, story_description, cover_photo, visibility_id, owner_id) VALUES (?, ?, ?, ?, ?)", details);
-    return rows;
+    const [result] = await promisePool.execute("INSERT INTO story (story_name, story_description, cover_photo, visibility_id, owner_id) VALUES (?, ?, ?, ?, ?)", details);
+    return result.insertId;
 };
 
 const updateStory = async (id, req) => {

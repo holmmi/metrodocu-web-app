@@ -1,11 +1,18 @@
 'use strict';
+
 const sharp = require('sharp');
 
-const makeCover = async (file, thumbname) => { // file = full path to image (req.file.path), thumbname = filename (req.file.filename)
-  // TODO: use sharp to create a png thumbnail of 160x160px, use async await
-  return await sharp(file).resize(160, 160).toFile('thumbnails/' + thumbname);
+const makeCover = async (buffer, fileName) => {
+  try {
+    await sharp(buffer)
+      .resize(240, 240)
+      .toFormat("png")
+      .toFile('uploads/covers/' + fileName);
+  } catch (error) {
+    console.error(error.message);
+  }
 };
 
 module.exports = {
-  makeCover,
+  makeCover
 };
