@@ -1,20 +1,76 @@
 {{> navigation}}
 <main>
+    <style>
+        .documents {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        tr:hover {
+            background-color: #F58A07;
+        }
+
+        tr.document { cursor: pointer; }
+
+        img {
+            width: 300px;
+        }
+    </style>
     <div class="container">
         <h1>{{story.story_name}}</h1>
         <p>Created: {{story.creation_date}}</p>
         <section>
-            <h2>Photos</h2>
-            <section>
-                <a href="https://placekitten.com/g/300/300" data-lightbox="kitten" data-title="My caption"><img src="https://placekitten.com/g/300/300"></a>
-                <a href="https://placekitten.com/g/300/300" data-lightbox="kitten" data-title="My caption"><img src="https://placekitten.com/g/300/300"></a>
-                <a href="https://placekitten.com/g/300/300" data-lightbox="kitten" data-title="My caption"><img src="https://placekitten.com/g/300/300"></a>
-            </section>
-        </section>
-        <section>
             <p>{{story.story_description}}</p>
         </section>
+        <section class="photos">
+            <h2>Photos</h2>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+        </section>
+        <section>
+            <h2>Documents</h2>
+        <table class="documents">
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Upload date</th>
+            </tr>
+            <tr>
+                <td>Jill</td>
+                <td>Smith</td>
+                <td>50</td>
+            </tr>
+            <tr class="document" data-href='https://google.fi/'>
+                <td>Jill</td>
+                <td>Smith</td>
+                <td>50</td>
+            </tr>
+            <tr class="document">
+                <td>Jill</td>
+                <td>Smith</td>
+                <td>50</td>
+            </tr>
+        </table>
+        </section>
+
     </div>
 </main>
+<script src="assets/lightbox2-2.11.3/dist/js/lightbox-plus-jquery.js"></script>
+<script src="/js/story.js"
 {{> loginModal}}
 {{> footer}}

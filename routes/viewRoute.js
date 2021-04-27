@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const viewController = require('../controllers/viewController');
 
 router.get("/", (req, res) => {
     res.render("home", {
@@ -21,13 +22,15 @@ router.get("/stories", (req, res) => {
     });
 });
 
+router.get("/stories/:id", viewController.showStory);
+
 router.get("/stories/create-story", (req, res) => {
     if (req.user) {
         res.render("create-story", {loggedIn: true});
     } else {
         res.status(401).render("not-found");
     }
-})
+});
 
 router.use((req, res, next) => {
     res.status(404).render("not-found", {

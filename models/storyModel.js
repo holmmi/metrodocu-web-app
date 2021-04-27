@@ -8,6 +8,17 @@ const getStoryVisibilities = async () => {
     return rows;
 };
 
+const getStoryVisibility = async (userId, storyId) => {
+    try {
+        console.log('getStoryVisibility (userId, storyId):',userId, storyId);
+        const [rows] = await promisePool.execute('SELECT a.visibility_id, a.owner_id, b.user_id FROM story a LEFT JOIN story_share b on b.user_id = ? WHERE a.story_id = ?;', [userId, storyId]);
+        return rows[0];
+    } catch (e) {
+        console.log('getStoryVisibility: ', e.message);
+        throw new Error('getStoryVisibility failed');
+    }
+};
+
 const getAllStories = async () => {
     try {
         // TODO: do the LEFT (or INNER) JOIN to get owner name too.
@@ -61,9 +72,10 @@ const likeStory = async (storyId, userId) => {
         console.log('likeStory: ', e.message);
         throw new Error('likeStory failed');
     }
-}
+};
 
 module.exports = {
+    getStoryVisibility,
     getStoryVisibilities,
     getAllStories,
     getStoryById,

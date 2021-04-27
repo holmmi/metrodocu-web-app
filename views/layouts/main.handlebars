@@ -1,34 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="preconnect" href="https://fonts.gstatic.com"> 
-        <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        {{#if story}}
-            <link rel="stylesheet" href="../css/style.css">
-            <link href="../lightbox2-2.11.3/dist/css/lightbox.min.css">
-        {{else}}
-            <link rel="stylesheet" href="./css/style.css">
-        {{/if}}
-        <title>MetroDocu</title>
-    </head>
-    <body>
-        {{{body}}}
-        {{#if story}}
-            {{#unless loggedIn}}
-                <script src="../js/login.js"></script>
-            {{/unless}}
-            <script src="../js/main.js"></script>
-
-            <script src="../lightbox2-2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
-        {{else}}
-            {{#unless loggedIn}}
-                <script src="./js/login.js"></script>
-            {{/unless}}
-            <script src="./js/main.js"></script>
-        {{/if}}
-
-    </body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    {{#if story}}
+        <link rel="stylesheet" href="assets/lightbox2-2.11.3/dist/css/lightbox.css">
+    {{/if}}
+    <title>MetroDocu</title>
+</head>
+<body>
+{{{body}}}
+{{#unless loggedIn}}
+    <script src="/js/login.js"></script>
+{{/unless}}
+<script src="/js/main.js"></script>
+</body>
 </html>
