@@ -16,6 +16,8 @@ router.get("/register", (req, res) => {
     });
 });
 
+router.get("/search", viewController.search);
+
 router.get("/stories", (req, res) => {
     res.render("stories", {
         loggedIn: req.user ? true : false

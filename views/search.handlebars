@@ -1,0 +1,22 @@
+{{> navigation}}
+<main>
+    <div class="container">
+        <h1>Search results</h1>
+        <section class="main-content">
+            {{#if (notEmpty searchResults)}}
+                <h2>Found {{length searchResults}} search result(s)</h2>
+            {{/if}}
+            {{#each searchResults}}
+                <div class="search-results">
+                    <a href="/stories/{{this.story_id}}">{{this.story_name}}</a>
+                    <p class="medium">{{this.firstWords}}</p>
+                    <p class="small">Created by {{this.username}} on {{this.creation_date}}</p>
+                </div>
+            {{else}}
+                <h2>There are no search results. Please specify your search.</h2>
+            {{/each}}
+        </section>
+    </div>
+</main>
+{{> loginModal}}
+{{> footer}}

@@ -13,8 +13,12 @@ const visibility = async (req, res) => {
 };
 
 const getStories = async (req, res) => {
-    const stories = await storyModel.getAllStories();
-    res.json(stories);
+    try {
+        res.json(await storyModel.getStories(req.user ? req.user.user_id : null, parseInt(req.query.visibility, 10)));
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({error: "Internal Server Error"});
+    }
 };
 
 const getStory = async (req, res) => {
@@ -26,9 +30,8 @@ const getStory = async (req, res) => {
 const addStory = async (req, res) => {
     if (req.user) {
         try {
-            console.log('storyController addStory', req.body);
             const {sname, sdescription, svisibility, files} = req.body;
-            // Decode Base64 string back to binary format
+            // Decode Base64 encoded string back to binary format
             const buffer = Buffer.from(files[0].content, "base64");
             const fileName = v4();
             // Create a resized cover photo from an image data and save it
@@ -43,6 +46,20 @@ const addStory = async (req, res) => {
         res.status(401).json({error: "Unauthorized"});
     }
 
+};
+
+const addLike = async (req, res) => {
+    if (req.user) {
+        try {
+            await storyModel.addLike([req.user.user_id, req.params.id]);
+            res.sendStatus(200);
+        } catch (error) {
+            console.error(error.message);
+            res.status(500).json({error: "Internal Server Error"});
+        }
+    } else {
+        res.status(401).json({error: "Unauthorized"});
+    }
 };
 
 const updateStory = async (req, res) => {
@@ -74,6 +91,7 @@ module.exports = {
     getStories,
     getStory,
     addStory,
+    addLike,
     updateStory,
     deleteStory,
     likeStory,

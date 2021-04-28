@@ -30,14 +30,14 @@ CREATE TABLE user_group(
 
 CREATE TABLE story_visibility(
     visibility_id INT PRIMARY KEY,
-    visibility_description VARCHAR(20) NOT NULL
+    visibility_description VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE story(
     story_id INT PRIMARY KEY AUTO_INCREMENT,
     story_name VARCHAR(50) NOT NULL,
     story_description VARCHAR(200),
-    cover_photo VARCHAR(60),
+    cover_photo VARCHAR(36),
     visibility_id INT NOT NULL,
     creation_date DATE NOT NULL DEFAULT CURDATE(),
     owner_id INT NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE story_document(
     document_id INT PRIMARY KEY AUTO_INCREMENT,
     document_name VARCHAR(50) NOT NULL,
     document_mime VARCHAR(20) NOT NULL,
-    document_location VARCHAR(60) NOT NULL,
+    document_location VARCHAR(36) NOT NULL,
     story_id INT,
     start_timestamp TIMESTAMP(6) GENERATED ALWAYS AS ROW START,
     end_timestamp TIMESTAMP(6) GENERATED ALWAYS AS ROW END,
@@ -90,15 +90,15 @@ CREATE TABLE story_comment(
 );
 
 CREATE INDEX idx_username ON user (username);
-CREATE INDEX idx_story ON story (owner_id, visibility_id);
+CREATE INDEX idx_story ON story (story_name, owner_id, visibility_id);
 CREATE INDEX idx_member ON user_group (group_id, user_id);
 CREATE INDEX idx_story_document ON story_document (story_id);
 CREATE INDEX idx_story_share ON story_share (story_id, user_id);
 CREATE INDEX idx_story_like ON story_like (story_id, user_id);
 
-INSERT INTO story_visibility VALUES (1, 'Public'), (2, 'Only me'), (3, 'Shared users');
+INSERT INTO story_visibility VALUES (1, 'Public'), (2, 'Private'), (3, 'Shared');
 
-INSERT INTO group_detail VALUES (1, 'User'), (2, 'Admin'); 
+INSERT INTO group_detail VALUES (1, 'User'), (2, 'Admin');
 
 DROP USER IF EXISTS 'metrodocu'@'localhost';
 CREATE USER 'metrodocu'@'localhost' IDENTIFIED BY 'changeme';

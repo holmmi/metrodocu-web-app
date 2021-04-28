@@ -2,6 +2,7 @@
 
 const pool = require('../database/pool');
 const promisePool = pool.promise();
+const queries = require('../sql/queries.json');
 
 const getStoryVisibilities = async () => {
     const [rows] = await promisePool.query("SELECT * FROM story_visibility ORDER BY visibility_id ASC");
@@ -19,14 +20,41 @@ const getStoryVisibility = async (userId, storyId) => {
     }
 };
 
-const getAllStories = async () => {
-    try {
-        // TODO: do the LEFT (or INNER) JOIN to get owner name too.
-        const [rows] = await promisePool.execute("SELECT s.story_id, story_name, story_description, cover_photo, creation_date, owner_id, COUNT(l.story_id) AS likecount FROM story AS s LEFT JOIN story_like AS l ON s.story_id = l.story_id GROUP BY s.story_id");
-        return rows;
-    } catch (e) {
-        console.error('getStories:', e.message);
-        throw new Error('getStories failed');
+const getStories = async (userId, visibilityId) => {
+    if (!userId) { // When the user is not authenticated
+        const [rows] = await promisePool.execute(queries.story.anonymous.publicStories);
+        return {rows}.rows;
+    } else {
+        switch (visibilityId) {
+            case 1: {
+                const [rows] = await promisePool.execute(queries.story.authenticated.public, [userId]);
+                return {rows}.rows;
+            }
+            case 2: {
+                const [rows] = await promisePool.execute(queries.story.authenticated.private, [userId, userId]);
+                return {rows}.rows;
+            }
+            case 3: {
+                const [rows] = await promisePool.execute(queries.story.authenticated.shared, [userId, userId]);
+                return {rows}.rows;
+            }
+        }
+    }
+};
+
+const getStoriesBySearchTerms = async (userId, query) => {
+    if (query !== '') {
+        const storyQuery = `%${query}%`;
+        const userQuery = `${query}%`;
+        if (userId) {
+            const [rows] = await promisePool.execute(queries.story.searchAuthenticated, [userId, storyQuery, userQuery]);
+            return rows;
+        } else {
+            const [rows] = await promisePool.execute(queries.story.searchUnauthenticated, [storyQuery, userQuery]);
+            return rows;
+        }
+    } else {
+        return [];
     }
 };
 
@@ -39,6 +67,10 @@ const addStory = async details => {
     const [result] = await promisePool.execute("INSERT INTO story (story_name, story_description, cover_photo, visibility_id, owner_id) VALUES (?, ?, ?, ?, ?)", details);
     return result.insertId;
 };
+
+const addLike = async (params) => {
+    await promisePool.execute("INSERT INTO story_like (user_id, story_id) VALUES (?, ?)", params);
+}
 
 const updateStory = async (id, req) => {
     try {
@@ -63,24 +95,14 @@ const deleteStory = async (id) => {
     }
 };
 
-const likeStory = async (storyId, userId) => {
-    try {
-        console.log('likeStory (storyId, userId):',storyId,userId);
-        const [rows] = await promisePool.execute('INSERT INTO story_like (story_id, user_id) VALUES (?, ?)');
-        return rows;
-    } catch (e) {
-        console.log('likeStory: ', e.message);
-        throw new Error('likeStory failed');
-    }
-};
-
 module.exports = {
     getStoryVisibility,
     getStoryVisibilities,
-    getAllStories,
+    getStories,
     getStoryById,
+    getStoriesBySearchTerms,
     addStory,
+    addLike,
     updateStory,
     deleteStory,
-    likeStory,
 };

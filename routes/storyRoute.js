@@ -9,6 +9,12 @@ router.get("/visibility", storyController.visibility);
 
 router.post("/new", storyValidator.validateStory, storyController.addStory);
 
+router.get("/", storyController.getStories);
+
+router
+  .route("/like/:id")
+  .post(storyController.addLike);
+
 router
   .route("/:id")
   .get(storyController.getStory)
