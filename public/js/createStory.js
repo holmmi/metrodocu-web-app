@@ -21,8 +21,7 @@ form.addEventListener("submit", async (event) => {
         });
         const result = await response.json();
         if (response.ok) {
-            console.log(JSON.stringify(result));
-            // window.location.href = "/stories/" + result.storyId;
+            window.location.href = "/stories/" + result.storyId;
         } else {
             console.log(JSON.stringify(result));
         }

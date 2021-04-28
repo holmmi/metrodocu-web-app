@@ -16,10 +16,18 @@ window.addEventListener("dragover", (event) => {
     if (event.target.id !== "drop-zone") {
         event.preventDefault();
     }
-},false);
+}, false);
 
 window.addEventListener("drop", (event) => {
     if (event.target.id !== "drop-zone") {
         event.preventDefault();
     }
-},false);
+}, false);
+
+const searchIcons = document.querySelectorAll(".search-container span");
+const searchForms = document.querySelectorAll(".search-container form");
+searchIcons.forEach((icon, index) => {
+    icon.addEventListener("click", () => {
+        searchForms[index].submit();
+    });
+});

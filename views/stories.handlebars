@@ -3,18 +3,21 @@
     <div class="container">
         <h1>Stories</h1>
         <section>
-            {{#if loggedIn}}
-                <div class="button-container">
+            <div class="button-container">
+                {{#if loggedIn}}
                     <div class="dropdown-container">
                         <!-- Dynamic content -->
                     </div>
-                    <button class="primary" id="create-story">Create story</button>
-                </div>
-            {{/if}}
+                    <button class="primary" onclick="clickCreateStory()">Create story</button>
+                {{/if}}
+            </div>
+            <div class="story-container">
+                <!-- Dynamic content -->
+            </div>
         </section>
     </div>
 </main>
-<script src="/js/storyVisibility.js"></script>
 <script src="/js/stories.js"></script>
+<script src="/js/storyVisibility.js"></script>
 {{> loginModal}}
 {{> footer}}

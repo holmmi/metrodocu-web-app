@@ -32,10 +32,8 @@ const validateStory = [
     .withMessage("File(s) were sent in invalid format.")
     .bail(),
   (req, res, next) => {
-    console.log("here");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log(errors.array());
       return res.status(400).json({errors: errors.array()});
     }
     next();

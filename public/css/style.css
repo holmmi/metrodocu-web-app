@@ -360,6 +360,114 @@ a.external-link:after {
     margin: 10px 0px;
 }
 
+.story-container {
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.story-container > figure.story {
+    flex-basis: calc(30% - 15px);
+    flex-shrink: 1;
+    margin: 10px 15px;
+    -webkit-box-shadow: 0px 5px 20px 5px rgba(0,0,0,0.5); 
+    box-shadow: 0px 5px 20px 5px rgba(0,0,0,0.5);
+}
+
+figure.story > figcaption {
+    padding: 10px;
+}
+
+figure.story > img {
+    min-width: 100%;
+}
+
+figure.story .story-header, figure.story .story-description {
+    display: block;
+    margin: 5px 0px;
+    padding: 4px 0;
+    border-bottom: 1px solid #909CC2;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: black;
+}
+
+.story-header > a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.story-header > a:hover {
+    text-decoration: underline;
+}
+
+figure.story .story-description {
+    min-height: 100px;
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+figure.story .story-social {
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 4px;
+}
+
+.story-social > .story-likes {
+    font-size: 1rem;
+    color: #084887;
+}
+
+.story-likes::before {
+    margin-right: 4px;
+    font-family: 'Material Icons';
+    content: 'thumb_up';
+}
+
+.story-social > .story-comments {
+    margin-left: auto;
+    color: #F58A07;
+    font-size: 1rem;
+}
+
+.story-comments::before {
+    margin-right: 4px;
+    font-family: 'Material Icons';
+    content: 'question_answer';
+}
+
+.search-results {
+    margin-bottom: 15px;
+    border-bottom: 1px solid lightgray;
+}
+
+.search-results > a {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #909CC2;
+    text-decoration: none;
+}
+
+.search-results > a:hover {
+    text-decoration: underline;
+}
+
+p.medium, p.small {
+    margin: 5px 0px;
+    line-height: 1.6;
+    font-family: inherit;
+    font-size: 1rem;
+    color: black;
+}
+
+p.small {
+    font-size: 0.6rem;
+}
+
 @media only screen and (max-width: 1024px) {
     nav.top {
         display: none;

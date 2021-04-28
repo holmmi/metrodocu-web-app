@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const viewController = require('../controllers/viewController');
 
 router.get("/", (req, res) => {
     res.render("home", {
@@ -14,6 +15,8 @@ router.get("/register", (req, res) => {
         loggedIn: req.user ? true : false
     });
 });
+
+router.get("/search", viewController.search);
 
 router.get("/stories", (req, res) => {
     res.render("stories", {
