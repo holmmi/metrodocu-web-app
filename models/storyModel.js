@@ -9,6 +9,17 @@ const getStoryVisibilities = async () => {
     return rows;
 };
 
+const getStoryVisibility = async (userId, storyId) => {
+    try {
+        console.log('getStoryVisibility (userId, storyId):',userId, storyId);
+        const [rows] = await promisePool.execute('SELECT a.visibility_id, a.owner_id, b.user_id FROM story a LEFT JOIN story_share b on b.user_id = ? WHERE a.story_id = ?;', [userId, storyId]);
+        return rows[0];
+    } catch (e) {
+        console.log('getStoryVisibility: ', e.message);
+        throw new Error('getStoryVisibility failed');
+    }
+};
+
 const getStories = async (userId, visibilityId) => {
     if (!userId) { // When the user is not authenticated
         const [rows] = await promisePool.execute(queries.story.anonymous.public);
@@ -45,7 +56,7 @@ const getStoriesBySearchTerms = async (userId, query) => {
     } else {
         return [];
     }
-}
+};
 
 const getStoryById = async storyId => {
     const [rows] = await promisePool.execute("SELECT s.story_id, story_name, story_description, cover_photo, creation_date, owner_id, COUNT(s.story_id) AS likecount FROM story AS s INNER JOIN story_like AS l ON s.story_id = l.story_id WHERE s.story_id = ?;", [storyId])
@@ -79,12 +90,13 @@ const deleteStory = async (id) => {
         const [rows] = await promisePool.execute('DELETE FROM story WHERE story_id = ?', [id]);
         return rows.affectedRows === 1;
     } catch (e) {
-        console.error('deleteCat:', e.message);
-        throw new Error('deleteCat failed');
+        console.error('deleteStory:', e.message);
+        throw new Error('deleteStory failed');
     }
 };
 
 module.exports = {
+    getStoryVisibility,
     getStoryVisibilities,
     getStories,
     getStoryById,

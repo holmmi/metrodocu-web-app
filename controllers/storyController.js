@@ -45,7 +45,7 @@ const addStory = async (req, res) => {
     } else {
         res.status(401).json({error: "Unauthorized"});
     }
-    
+
 };
 
 const addLike = async (req, res) => {
@@ -77,6 +77,15 @@ const deleteStory = async (req, res) => {
     res.json(deleteOk);
 };
 
+const likeStory = async (req, res, next) => {
+    if (req.user) {
+        await storyModel.likeStory(req.body.storyId, req.user.user_id);
+        next();
+    } else {
+        return res.status(401).json({error: "User not logged in"});
+    }
+};
+
 module.exports = {
     visibility,
     getStories,
@@ -85,4 +94,5 @@ module.exports = {
     addLike,
     updateStory,
     deleteStory,
+    likeStory,
 };

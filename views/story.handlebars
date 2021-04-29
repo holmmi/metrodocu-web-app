@@ -1,0 +1,102 @@
+{{> navigation}}
+<style>
+    .documents {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+
+    tr:hover {
+        background-color: #F58A07;
+    }
+
+    tr.document { cursor: pointer; }
+
+    img {
+        width: 300px;
+    }
+
+    textarea[name="comment"] {
+        width: 500px;
+        height: 300px;
+        text-align: left;
+        vertical-align: top;
+    }
+</style>
+<main>
+    <div class="container">
+        <h1>{{story.story_name}}</h1>
+        <p>Created: {{formattedDate}}</p>
+        <section>
+            <p>{{story.story_description}}</p>
+        </section>
+        <section class="photos">
+            <h2>Photos</h2>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
+        </section>
+        <section>
+            <h2>Documents</h2>
+        <table class="documents">
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Upload date</th>
+            </tr>
+            <tr>
+                <td>Jill</td>
+                <td>Smith</td>
+                <td>50</td>
+            </tr>
+            <tr class="document" data-href='https://google.fi/'>
+                <td>Jill</td>
+                <td>Smith</td>
+                <td>50</td>
+            </tr>
+            <tr class="document">
+                <td>Jill</td>
+                <td>Smith</td>
+                <td>50</td>
+            </tr>
+        </table>
+        </section>
+
+        <section>
+            <h2>Comments</h2>
+            {{#if loggedIn}}
+            <form id="addCommentForm">
+                <div class="input-container">
+                    <label for="comment">Comment</label>
+                    <textarea name="comment" maxlength="200"></textarea>
+                </div>
+                <div class = "input-container">
+                    <input type="submit" value="Send">
+                </div>
+
+            </form>
+            {{/if}}
+            <div class="comments">
+
+            </div>
+        </section>
+
+    </div>
+</main>
+<script src="assets/lightbox2-2.11.3/dist/js/lightbox-plus-jquery.js"></script>
+<script src="/js/story.js"></script>
+{{> loginModal}}
+{{> footer}}

@@ -22,7 +22,7 @@ router.get("/stories", (req, res) => {
     res.render("stories", {
         loggedIn: req.user ? true : false
     });
-})
+});
 
 router.get("/stories/create-story", (req, res) => {
     if (req.user) {
@@ -30,7 +30,9 @@ router.get("/stories/create-story", (req, res) => {
     } else {
         res.status(401).render("not-found");
     }
-})
+});
+
+router.get("/stories/:id", viewController.showStory);
 
 router.use((req, res, next) => {
     res.status(404).render("not-found", {
