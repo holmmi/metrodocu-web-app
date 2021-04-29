@@ -21,23 +21,32 @@ const showStory = async (req, res, next) => {
   } else if(storyVisibility.visibility_id === 3 && storyVisibility.user_id === userId) {
     console.log("Story shared access");
     renderStory(req, res, story);
+  } else {
+    notFound(req,res);
   }
 };
 
 const renderStory = (req, res, story) => {
   console.log("showStory story:", story);
+  const formattedDate = story.creation_date.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
   res.render("story", {
     story,
+    formattedDate,
     loggedIn: req.user ? true : false
   });
-}
+};
 
 const notFound = (req, res, next) => {
 
   res.render("not-found", {
     loggedIn: req.user ? true : false
   });
-}
+};
 
 const search = async (req, res) => {
     try {

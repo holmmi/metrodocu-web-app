@@ -1,35 +1,42 @@
 {{> navigation}}
+<style>
+    .documents {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+
+    tr:hover {
+        background-color: #F58A07;
+    }
+
+    tr.document { cursor: pointer; }
+
+    img {
+        width: 300px;
+    }
+
+    textarea[name="comment"] {
+        width: 500px;
+        height: 300px;
+        text-align: left;
+        vertical-align: top;
+    }
+</style>
 <main>
-    <style>
-        .documents {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-
-        tr:hover {
-            background-color: #F58A07;
-        }
-
-        tr.document { cursor: pointer; }
-
-        img {
-            width: 300px;
-        }
-    </style>
     <div class="container">
         <h1>{{story.story_name}}</h1>
-        <p>Created: {{story.creation_date}}</p>
+        <p>Created: {{formattedDate}}</p>
         <section>
             <p>{{story.story_description}}</p>
         </section>
@@ -68,9 +75,28 @@
         </table>
         </section>
 
+        <section>
+            <h2>Comments</h2>
+            {{#if loggedIn}}
+            <form id="addCommentForm">
+                <div class="input-container">
+                    <label for="comment">Comment</label>
+                    <textarea name="comment" maxlength="200"></textarea>
+                </div>
+                <div class = "input-container">
+                    <input type="submit" value="Send">
+                </div>
+
+            </form>
+            {{/if}}
+            <div class="comments">
+
+            </div>
+        </section>
+
     </div>
 </main>
 <script src="assets/lightbox2-2.11.3/dist/js/lightbox-plus-jquery.js"></script>
-<script src="/js/story.js"
+<script src="/js/story.js"></script>
 {{> loginModal}}
 {{> footer}}

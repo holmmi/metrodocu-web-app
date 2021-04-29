@@ -4,6 +4,7 @@
   });
 });*/
 const url = 'https://localhost:8000';
+const id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)
 
 const table = document.querySelector('.documents');
 const photos = document.querySelector('.photos');
@@ -34,6 +35,7 @@ const addDocuments = (documents) => {
     } else {
       //create table rows
       const tr = document.createElement('tr');
+      tr.className = 'document';
       tr.innerHTML += `<td>${doc.document_name}</td>
                      <td>${doc.document_mime}</td>
                      <td>${doc.start_timestamp}</td>`
@@ -49,11 +51,39 @@ const addDocuments = (documents) => {
 };
 
 const getDocuments = async () => {
-  const response = await fetch(url + '/document' + window.location.path);
+  const response = await fetch(url + '/document/' + id);
   const docs = await response.json;
-  console.log(window.location.path);
+  console.log(window.location);
 
   addDocuments(docs);
 };
+
+const commentForm = document.querySelector('#addCommentForm');
+commentForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  formData.forEach((value, key) => {
+    json[key] = value;
+  });
+  try {
+    const response = await fetch("/comment", {
+      method: "POST",
+      body: JSON.stringify(json),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    if (response.ok) {
+      location.reload();
+    }
+    if (response.status === 401) {
+      //loginError.style.display = "block";
+    }
+  } catch (error) {
+    console.error(error);
+    //loginError.style.display = "block";
+    //loginError.innerText = "Service is down. Please try again later."
+  }
+});
 
 getDocuments();

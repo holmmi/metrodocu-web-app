@@ -24,8 +24,6 @@ router.get("/stories", (req, res) => {
     });
 });
 
-router.get("/stories/:id", viewController.showStory);
-
 router.get("/stories/create-story", (req, res) => {
     if (req.user) {
         res.render("create-story", {loggedIn: true});
@@ -33,6 +31,8 @@ router.get("/stories/create-story", (req, res) => {
         res.status(401).render("not-found");
     }
 });
+
+router.get("/stories/:id", viewController.showStory);
 
 router.use((req, res, next) => {
     res.status(404).render("not-found", {
