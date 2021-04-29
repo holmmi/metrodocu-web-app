@@ -5,12 +5,14 @@ const showStory = async (req, res, next) => {
   console.log('showStory: http get story with path param', req.params);
   const story = await storyModel.getStoryById(req.params.id);
   const user = req.user ? true : false;
-  const userId = user ? req.user.user_id : null;
-  const storyVisibility = userId ? await storyModel.getStoryVisibility(userId,req.params.id) : false;
+  const userId = user ? req.user.user_id : 0;
+  const storyVisibility = story ? await storyModel.getStoryVisibility(userId,req.params.id) : false;
 
   console.log("storyVisibility",storyVisibility);
 
-  if(storyVisibility.visibility_id === 1) {
+  if(!storyVisibility) {
+    notFound(req,res);
+  } else if(storyVisibility.visibility_id === 1) {
     console.log("Story public");
     renderStory(req,res,story);
   } else if(storyVisibility.visibility_id === 2 && userId === storyVisibility.owner_id) {
@@ -19,8 +21,6 @@ const showStory = async (req, res, next) => {
   } else if(storyVisibility.visibility_id === 3 && storyVisibility.user_id === userId) {
     console.log("Story shared access");
     renderStory(req, res, story);
-  } else {
-    notFound(req,res);
   }
 };
 
