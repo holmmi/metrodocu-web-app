@@ -51,6 +51,7 @@ const addDocuments = (documents) => {
 const getDocuments = async () => {
   const response = await fetch(url + '/document' + window.location.path);
   const docs = await response.json;
+  console.log(window.location.path);
 
   addDocuments(docs);
 };

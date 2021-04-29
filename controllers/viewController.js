@@ -6,7 +6,7 @@ const showStory = async (req, res, next) => {
   const story = await storyModel.getStoryById(req.params.id);
   const user = req.user ? true : false;
   const userId = user ? req.user.user_id : null;
-  const storyVisibility = (await storyModel.getStoryVisibility(userId,req.params.id));
+  const storyVisibility = userId ? await storyModel.getStoryVisibility(userId,req.params.id) : false;
 
   console.log("storyVisibility",storyVisibility);
 
