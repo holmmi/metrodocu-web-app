@@ -86,18 +86,17 @@ filesInput.addEventListener("change", async () => {
  }
 
  const addFileToSection = async file => {
-    if (file.type.startsWith("image")) {
-        const p = document.createElement("p");
-        p.innerText = file.name;
-        p.className = "image";
-        uploadSection.appendChild(p);
-        const paragraphs = document.querySelectorAll(".upload-section p");
-        paragraphs.forEach((paragraph, index) => {
-            paragraph.addEventListener("click", (event) => {
-                event.stopPropagation();
-                files.splice(index, 1);
-                uploadSection.removeChild(paragraph);
-            });
-        });   
-    }
+    const p = document.createElement("p");
+    p.innerText = file.name;
+    p.className = file.type.startsWith("image") ? "image-upload" : "document-upload";
+    uploadSection.appendChild(p);
+    const paragraphs = document.querySelectorAll(".upload-section p");
+    paragraphs.forEach((paragraph, index) => {
+        paragraph.addEventListener("click", (event) => {
+            event.stopPropagation();
+            files.splice(index, 1);
+            uploadSection.removeChild(paragraph);
+        });
+    });
+    document.querySelector(".upload-instructions").style.display = "none";
  };

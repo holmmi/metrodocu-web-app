@@ -349,7 +349,9 @@ a.external-link:after {
     min-width: 40%;
     padding: 10px;
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     border: 2px dashed #F58A07;
     border-radius: 5px;
     cursor: pointer;
@@ -358,6 +360,12 @@ a.external-link:after {
 .upload-section > p {
     width: 100%;
     margin: 10px 0px;
+}
+
+.upload-instructions {
+    font-size: 1.5rem;
+    color: #909CC2;
+    font-weight: 700;
 }
 
 .story-container {
@@ -466,6 +474,22 @@ p.medium, p.small {
 
 p.small {
     font-size: 0.6rem;
+}
+
+p.image-upload, p.document-upload {
+    color: #084887;
+}
+
+p.image-upload::before {
+    margin-right: 4px;
+    font-family: 'Material Icons';
+    content: 'image';
+}
+
+p.document-upload {
+    margin-right: 4px;
+    font-family: 'Material Icons';
+    content: 'text_snippet';
 }
 
 @media only screen and (max-width: 1024px) {
