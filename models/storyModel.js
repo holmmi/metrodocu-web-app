@@ -22,7 +22,7 @@ const getStoryVisibility = async (userId, storyId) => {
 
 const getStories = async (userId, visibilityId) => {
     if (!userId) { // When the user is not authenticated
-        const [rows] = await promisePool.execute(queries.story.anonymous.publicStories);
+        const [rows] = await promisePool.execute(queries.story.anonymous.public);
         return {rows}.rows;
     } else {
         switch (visibilityId) {
