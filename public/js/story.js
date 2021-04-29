@@ -3,7 +3,6 @@
     window.location = $(this).data("href");
   });
 });*/
-const url = 'https://localhost:8000';
 const id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)
 
 const table = document.querySelector('.documents');
@@ -51,7 +50,7 @@ const addDocuments = (documents) => {
 };
 
 const getDocuments = async () => {
-  const response = await fetch(url + '/document/' + id);
+  const response = await fetch('/document/' + id);
   const docs = await response.json;
   console.log(window.location);
 
@@ -61,10 +60,12 @@ const getDocuments = async () => {
 const commentForm = document.querySelector('#addCommentForm');
 commentForm.addEventListener('submit', async event => {
   event.preventDefault();
+  const json = {};
   const formData = new FormData(event.target);
   formData.forEach((value, key) => {
     json[key] = value;
   });
+  json['storyId'] = id;
   try {
     const response = await fetch("/comment", {
       method: "POST",

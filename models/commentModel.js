@@ -3,9 +3,11 @@
 const pool = require('../database/pool');
 const promisePool = pool.promise();
 
-const addComment = async details => {
+//const getComments async
+
+const addComment = async (userId, storyId, comment) => {
   try {
-    const [rows] = await promisePool.execute("INSERT INTO story_comment (user_id, story_id, comment) VALUES (?, ?, ?)", details);
+    const [rows] = await promisePool.execute("INSERT INTO story_comment (user_id, story_id, comment) VALUES (?, ?, ?)", [userId, storyId, comment]);
     console.log('commentModel insert:', rows);
     return rows.insertId;
   } catch (e) {
