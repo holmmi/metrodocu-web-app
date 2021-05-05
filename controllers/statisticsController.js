@@ -22,7 +22,7 @@ const topCommenters = async (req, res) => {
 
 const topLiked = async (req, res) => {
     try {
-        const likes = await statisticsModel.getStoryLikes();
+        const likes = await statisticsModel.getStoryLikes(parseInt(req.query.topCount));
         res.json(likes);
     } catch (error) {
         console.error(error.message);

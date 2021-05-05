@@ -5,8 +5,17 @@ const topCommenters = document.querySelector('.top-commenters');
 const topLiked = document.querySelector('.top-liked');
 const topCommented = document.querySelector('.top-commented');
 
+const getPublicStories = async () => {
+    try {
+        const response = await fetch("/story/visibility=" + 1);
+        const result = await response.json();
+    } catch (e) {
+        
+    }
+};
+
+
 const addUserLikes = (likes) => {
-    console.log(likes);
     topLikers.innerHTML = `<tr>
                                 <th>User</th>
                                 <th>Likes</th>
@@ -49,8 +58,8 @@ const addStoryLikes = (likes) => {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
         const a = document.createElement('a');
-        a.href = `/stories/${like.id}`;
-        a.textContent = like.name;
+        a.href = `/stories/${like.story_id}`;
+        a.textContent = like.story_name;
         td.appendChild(a);
         const td2 = document.createElement('td');
         td2.textContent = like.likes;
@@ -80,11 +89,9 @@ const addStoryComments = (comments) => {
     });
 };
 
-
 const getUserLikes = async () => {
     const response = await fetch("/statistics/likers");
     const likes = await response.json();
-    console.log(JSON.stringify(response));
 
     addUserLikes(likes);
 };
@@ -97,7 +104,7 @@ const getUserComments = async () => {
 };
 
 const getStoryLikes = async () => {
-    const response = await fetch("/statistics/storylikes");
+    const response = await fetch("/statistics/storylikes?topCount=" + 10);
     const likes = await response.json();
 
     addStoryLikes(likes);

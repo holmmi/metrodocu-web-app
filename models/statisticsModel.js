@@ -13,13 +13,13 @@ const getUserComments = async () => {
     return rows;
 };
 
-const getStoryLikes = async () => {
-    const [rows] = await promisePool.execute("SELECT s.story_id AS id, s.story_name AS name, COUNT(l.story_id) AS likes FROM story AS s RIGHT JOIN story_like AS l ON s.story_id = l.story_id GROUP BY s.story_id ORDER BY likes, s.story_id DESC LIMIT 10");
+const getStoryLikes = async (topCount) => {
+    const [rows] = await promisePool.execute("SELECT s.*, COUNT(l.story_id) AS likes, (SELECT COUNT(*) FROM story_comment WHERE story_id = s.story_id) AS comments FROM story AS s RIGHT JOIN story_like AS l ON s.story_id = l.story_id WHERE s.visibility_id = 1 GROUP BY s.story_id ORDER BY s.story_id, likes  DESC LIMIT ?", [topCount]);
     return rows;
 };
 
 const getStoryComments = async () => {
-    const [rows] = await promisePool.execute("SELECT s.story_id AS id, s.story_name AS name, COUNT(c.story_id) AS comments FROM story AS s RIGHT JOIN story_comment AS c ON s.story_id = c.story_id GROUP BY s.story_id ORDER BY comments, s.story_id DESC LIMIT 10");
+    const [rows] = await promisePool.execute("SELECT s.story_id AS id, s.story_name AS name, COUNT(c.story_id) AS comments FROM story AS s RIGHT JOIN story_comment AS c ON s.story_id = c.story_id WHERE s.visibility_id = 1 GROUP BY s.story_id ORDER BY s.story_id, comments DESC LIMIT 10");
     return rows;
 };
 
