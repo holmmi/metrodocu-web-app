@@ -9,11 +9,14 @@ const bcrypt = require('bcrypt');
 
 passport.use(new LocalStrategy({session: false}, async (username, password, done) => {
     try {
-        const user = await userModel.getUserByUsername(username);
+        const userDetails = await userModel.getUserByUsername(username);
+        const groups = userDetails.map(userDetail => userDetail.group_id);
+        const user = userDetails[0];
         if (user) {
             if (await bcrypt.compare(password, user.password)) {
                 delete user.password;
-                return done(null, {...user});
+                delete user.group_id;
+                return done(null, {...user, groups: groups});
             }
         }
         return done(null, false);
@@ -34,9 +37,12 @@ passport.use(new JwtStrategy({
     algorithms: ["RS256"]
 }, async (jwtPayload, done) => {
     try {
-        const user = await userModel.getUserById(jwtPayload.userId);
+        const userDetails = await userModel.getUserById(jwtPayload.userId);
+        const groups = userDetails.map(userDetail => userDetail.group_id);
+        const user = userDetails[0];
         delete user.password;
-        return user ? done(null, {...user}) : done(null, false);
+        delete user.group_id;
+        return user ? done(null, {...user, groups: groups}) : done(null, false);
     } catch (error) {
         console.error(error);
         return done(error, false);

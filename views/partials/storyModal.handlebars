@@ -1,0 +1,29 @@
+<div id="story-modal" class="modal-container">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2>Update story</h2>
+        </div>
+        <form id="update-story">
+            <div class="modal-content">
+                <div class="input-container">
+                    <label for="sname">Story name</label>
+                    <input type="text" value="{{story.story_name}}">
+                </div>
+                <div class="input-container">
+                    <label for="sdescription">Story description</label>
+                    <textarea name="sdescription">{{story.story_description}}</textarea>
+                </div>
+                <div class="input-container">
+                    <label for="svisibility">Visibility</label>
+                    <div id="svisibility" class="dropdown-container">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Update">
+                    <button class="primary" type="button">Close</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

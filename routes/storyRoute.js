@@ -9,16 +9,29 @@ router.get("/visibility", storyController.visibility);
 
 router.post("/new", storyValidator.validateStory, storyController.addStory);
 
-router.get("/", storyController.getStories);
+router.get("/:storyId/document/:documentId", storyController.checkStoryAccessRights, storyController.getDocument);
 
 router
   .route("/like/:id")
   .post(storyController.addLike);
 
 router
+  .route("/upload/:id")
+  .post(storyController.storyOwnerAccessCheck, storyController.uploadDocument);
+
+router
+  .route("/:storyId/comment")
+  .get(storyController.checkStoryAccessRights, storyController.getComments)
+  .post(storyController.checkStoryAccessRights, storyController.addComment);
+
+router.delete("/comment/:commentId", storyController.deleteComment);
+
+router
   .route("/:id")
   .get(storyController.getStory)
   .put(storyController.updateStory)
   .delete(storyController.deleteStory);
+
+router.get("/", storyController.getStories);
 
 module.exports = router;

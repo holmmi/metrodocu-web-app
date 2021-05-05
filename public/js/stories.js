@@ -12,7 +12,6 @@ const loadStories = async (visibilityId) => {
             stories = result.map(story => {
                 return {...story, isLiked: story.isLiked > 0 ? true : false};
             });
-            console.log(JSON.stringify(stories));
             stories.forEach((story, index) => {
                 const figure = document.createElement("figure");
                 figure.className = "story";
