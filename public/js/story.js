@@ -5,7 +5,7 @@
 });*/
 const id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)
 
-const table = document.querySelector('.documents');
+const table = document.querySelector('.uploads');
 const photos = document.querySelector('.photos');
 
 const addPhoto = (photo) => {
@@ -18,6 +18,7 @@ const addPhoto = (photo) => {
   a.appendChild(img);
 
   photos.appendChild(a);
+
 
 };
 
@@ -51,8 +52,7 @@ const addDocuments = (documents) => {
 
 const getDocuments = async () => {
   const response = await fetch('/document/' + id);
-  const docs = await response.json;
-  console.log(window.location);
+  const docs = await response.json();
 
   addDocuments(docs);
 };

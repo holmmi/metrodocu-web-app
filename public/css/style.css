@@ -492,6 +492,38 @@ p.document-upload {
     content: 'text_snippet';
 }
 
+.statistics {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.user-statistics {
+    flex: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-content: center;
+}
+
+.story-statistics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-content: center;
+    flex: 50%;
+}
+
+.statistics-container {
+    flex-direction: row;
+    text-align: center;
+    width: 50%;
+}
+
+.statistics-container table {
+    margin: auto;
+}
+
 @media only screen and (max-width: 1024px) {
     nav.top {
         display: none;
