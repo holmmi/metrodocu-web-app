@@ -15,14 +15,16 @@
             <span class="material-icons search">search</span>
         </form>
     </div>
+    <div class="nav-button-container">
     {{#if loggedIn}}
-        
+        <a href="/auth/logout">
+            <button class="primary" id="logout-button">Logout</button>
+        </a>
     {{^}}
-        <div class="nav-button-container">
-            <button class="primary" id="login-button">Log in</button>
-            <button class="primary" id="register-button">Register</button>
-        </div>
+        <button class="primary" id="login-button">Log in</button>
+        <button class="primary" id="register-button">Register</button>
     {{/if}}
+    </div>
 </nav>
 <nav class="top mobile">
     <h1><a href="/">MetroDocu</a></h1>
@@ -40,6 +42,9 @@
     <ul>
         <li><span class="material-icons">perm_media</span><a href="/stories">Stories</a></li>
         <li><span class="material-icons">leaderboard</span><a href="/statistics">Statistics</a></li>
+        {{#if loggedIn}}
+            <li><span class="material-icons">logout</span><a href="/auth/logout">Logout</a></li>
+        {{/if}}
         {{#unless loggedIn}}
             <li><span class="material-icons">login</span><a id="login-link" href="#">Log in</a></li>
             <li><span class="material-icons">person_add</span><a href="/register">Register</a></li>

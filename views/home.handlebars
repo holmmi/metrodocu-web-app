@@ -11,6 +11,14 @@
             <div class="story-container">
                 <!-- Dynamic content -->
             </div>
+            <div class="button-container">
+                {{#if loggedIn}}
+                    <div class="dropdown-container">
+                        <!-- Dynamic content -->
+                    </div>
+                    <button class="primary" onclick="clickCreateStory()">Create story</button>
+                {{/if}}
+            </div>
         </section>
     </div>
 </main>
