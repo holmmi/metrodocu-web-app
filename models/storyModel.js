@@ -74,7 +74,6 @@ const updateStory = async (id, req) => {
     try {
         const [rows] = await promisePool.execute('UPDATE story SET story_name = ?, story_description = ?, cover_photo = ?, visibility_id = ? WHERE story_id = ?;',
             [req.body.storyName, req.body.storyDesc, req.body.storyCover, req.body.storyVisibility, id]);
-        console.log('storyModel update:', rows);
         return rows.affectedRows === 1;
     } catch (e) {
         console.error('updateStory:', e.message);
@@ -84,7 +83,6 @@ const updateStory = async (id, req) => {
 
 const deleteStory = async (id) => {
     try {
-        console.log('storyModel deleteStory', id);
         const [rows] = await promisePool.execute('DELETE FROM story WHERE story_id = ?', [id]);
         return rows.affectedRows === 1;
     } catch (e) {

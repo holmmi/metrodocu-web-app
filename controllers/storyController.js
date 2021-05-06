@@ -68,9 +68,13 @@ const getStories = async (req, res) => {
 };
 
 const getStory = async (req, res) => {
-    console.log('getStory: http get story with path param', req.params);
-    const story = await storyModel.getStoryById(req.params.storyId);
-    res.json(story);
+    try {
+        const story = await storyModel.getStoryById(req.params.storyId);
+        res.json(story);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({error: "Internal Server Error"});
+    }
 };
 
 const addStory = async (req, res) => {

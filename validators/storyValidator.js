@@ -5,7 +5,6 @@ const {check, validationResult} = require('express-validator');
 const validateStory = [
   check("sname")
     .trim()
-    .escape()
     .notEmpty()
     .withMessage("Story name cannot be empty.")
     .bail()
@@ -14,9 +13,8 @@ const validateStory = [
     .bail(),
   check("sdescription")
     .trim()
-    .escape()
     .notEmpty()
-    .withMessage("Description cannt be empty.")
+    .withMessage("Description cannot be empty.")
     .bail()
     .isLength({max: 200})
     .withMessage("Only 200 charactes allowed in description.")

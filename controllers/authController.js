@@ -27,7 +27,6 @@ const check_availability = async (req, res) => {
 
 const register = async (req, res, next) => {
     try {
-        console.log(req.body.password);
         const {username, fname, lname} = req.body;
         const password = await bcrypt.hash(req.body.password, 10);
         await userModel.addUser([username, fname, lname, password]);
