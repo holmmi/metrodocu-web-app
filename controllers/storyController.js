@@ -67,6 +67,15 @@ const getStories = async (req, res) => {
     }
 };
 
+const getCover = (req, res) => {
+    res.download("uploads/covers/" + req.params.fileName, (err) => {
+        if (err) {
+            res.sendStatus(500);
+            console.error("getCover: ", err.message);
+        }
+    });
+}
+
 const getStory = async (req, res) => {
     console.log('getStory: http get story with path param', req.params);
     const story = await storyModel.getStoryById(req.params.storyId);
@@ -215,6 +224,7 @@ module.exports = {
     storyOwnerAccessCheck,
     visibility,
     getStories,
+    getCover,
     getStory,
     addStory,
     addLike,

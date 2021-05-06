@@ -18,7 +18,7 @@ const loadStories = async () => {
                 
                 const img = document.createElement("img");
                 img.alt = "Cover photo";
-                img.src = "/covers/" + story.cover_photo;
+                img.src = `/story/${story.story_id}/cover/${story.cover_photo}`;
                 figure.appendChild(img);
 
                 const figcaption = document.createElement("figcaption");

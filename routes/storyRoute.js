@@ -11,6 +11,8 @@ router.post("/new", storyValidator.validateStory, storyController.addStory);
 
 router.get("/:storyId/document/:documentId", storyController.checkStoryAccessRights, storyController.getDocument);
 
+router.get("/:storyId/cover/:fileName", storyController.checkStoryAccessRights, storyController.getCover);
+
 router
   .route("/like/:storyId")
   .post(storyController.checkStoryAccessRights, storyController.addLike);
