@@ -27,10 +27,10 @@ router
 router.delete("/comment/:commentId", storyController.deleteComment);
 
 router
-  .route("/:id")
-  .get(storyController.getStory)
-  .put(storyController.updateStory)
-  .delete(storyController.deleteStory);
+  .route("/:storyId")
+  .get(storyController.checkStoryAccessRights, storyController.getStory)
+  .put(storyController.checkStoryAccessRights, storyController.updateStory)
+  .delete(storyController.checkStoryAccessRights, storyController.deleteStory);
 
 router.get("/", storyController.getStories);
 

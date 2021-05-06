@@ -10,6 +10,7 @@ const { getFormattedTimestamp } = require('../utils/time');
 
 const checkStoryAccessRights = async (req, res, next) => {
     try {
+        console.log(req.params.storyId);
         const visibilityInformation = await storyModel.getStoryVisibility(req.user ? req.user.user_id : 0, req.params.storyId);
         res.locals.storyOwner = req.user ? req.user.user_id === visibilityInformation.owner_id : false;
         if (visibilityInformation.visibility_id === VISIBILITIES.PUBLIC) {
@@ -68,7 +69,7 @@ const getStories = async (req, res) => {
 
 const getStory = async (req, res) => {
     console.log('getStory: http get story with path param', req.params);
-    const story = await storyModel.getStoryById(req.params.id);
+    const story = await storyModel.getStoryById(req.params.storyId);
     res.json(story);
 };
 
