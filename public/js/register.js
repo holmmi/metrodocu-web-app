@@ -16,12 +16,13 @@ form.addEventListener("submit", async event => {
             formData.forEach((value, key) => {
                 bodyData[key] = value;
             });
+            console.log(bodyData[password]);
             const response = await fetch("/auth/register", {
                 method: "POST",
+                body: JSON.stringify(bodyData),
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(bodyData)
             });
             const result = await response.json(response);
             if (response.ok) {

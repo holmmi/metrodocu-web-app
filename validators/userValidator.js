@@ -26,8 +26,6 @@ const validateRegistration = [
         .withMessage("Username has to be five characters long.")
         .bail(),
     check("password")
-        .trim()
-        .escape()
         .isStrongPassword()
         .withMessage("Please choose a strong password."),
     async (req, res, next) => {
