@@ -9,34 +9,43 @@ const closeStoryModal = () => {
   modal.style.display = "none";
 };
 
+// Update story
 const storyForm = document.getElementById("update-story");
 storyForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const formData = new FormData(event.target);
   formData.append("svisibility", visibilities[selectedVisibility].visibility_id);
   const json = {};
-  formData.forEach((key, value) => {
+  formData.forEach((value, key) => {
     json[key] = value;
   });
   try {
     const response = await fetch("/story/" + id, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(json)
     });
-    const result = await response.json();
     if (response.ok) {
-      // Update the story without refreshing page
-    }
-    if (response.status === 400) {
-      
+      location.reload();
     }
   } catch (error) {
     console.error(error);
   }
 });
+
+// Remove story
+const deleteStory = async () => {
+  try {
+    const response = await fetch("/story/" + id, { method: "DELETE" });
+    if (response.ok) {
+      window.location.href = "/stories";
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // File uploads
 const fileUpload = new FileUpload(["application/pdf", "image/png", "image/gif", "image/jpg", "image/jpeg"], 10);

@@ -1,6 +1,7 @@
 'use strict';
 
 const storyModel = require('../models/storyModel');
+const GROUPS = require('../constants/groups');
 const VISIBILITIES = require('../constants/visibilities');
 
 const checkStoryAccessRights = async (req, res, next) => {
@@ -48,7 +49,15 @@ const showStory = async (req, res) => {
                         storyId: detail.story_id,
                         documentId: detail.document_id, 
                         name: detail.document_name,
-                        location: detail.document_location
+                        location: detail.document_location,
+                        uploadedAt: detail.creation_date.toLocaleDateString("en-US", {
+                          year: "2-digit",
+                          month: "2-digit",
+                          day: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        })
                       };
                     });
   const story = details[0];
@@ -61,6 +70,7 @@ const showStory = async (req, res) => {
   res.render("story", {
     loggedIn: req.user ? true : false,
     owner: res.locals.storyOwner,
+    admin: req.user ? req.user.groups.includes(GROUPS.ADMIN) : false,
     story,
     formattedDate,
     images,

@@ -8,6 +8,9 @@
                 {{#if owner}}
                     <button class="primary" onclick="showStoryModal()">Update story</button>
                 {{/if}}
+                {{#if admin}}
+                    <button class="primary" onclick="deleteStory()">Delete story</button>
+                {{/if}}
             </div>
             <p class="medium">{{story.story_description}}</p>
             <h2>Images</h2>
@@ -29,14 +32,14 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Created at</th>
+                                <th>Uploaded at</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#each documents}}
                                 <tr>
                                     <td><a href="/story/{{this.storyId}}/document/{{this.documentId}}">{{this.name}}</a></td>
-                                    <td>Date</td>
+                                    <td>{{this.uploadedAt}}</td>
                                 </tr>
                             {{/each}}
                         </tbody>

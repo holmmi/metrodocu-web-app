@@ -19,7 +19,7 @@ app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 // Parse JSON bodies
-app.use(express.json({limit: "5MB"}));
+app.use(express.json({limit: "10MB"}));
 
 // Serve static files
 app.use(express.static("./public/"));

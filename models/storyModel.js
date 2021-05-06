@@ -3,6 +3,7 @@
 const pool = require('../database/pool');
 const promisePool = pool.promise();
 const queries = require('../sql/queries.json');
+const VISIBILITIES = require('../constants/visibilities');
 
 const getStoryVisibilities = async () => {
     const [rows] = await promisePool.query("SELECT * FROM story_visibility ORDER BY visibility_id ASC");
@@ -24,15 +25,15 @@ const getStories = async (userId, visibilityId) => {
         return {rows}.rows;
     } else {
         switch (visibilityId) {
-            case 1: {
+            case VISIBILITIES.PUBLIC: {
                 const [rows] = await promisePool.execute(queries.story.authenticated.public, [userId]);
                 return {rows}.rows;
             }
-            case 2: {
+            case VISIBILITIES.PRIVATE: {
                 const [rows] = await promisePool.execute(queries.story.authenticated.private, [userId, userId]);
                 return {rows}.rows;
             }
-            case 3: {
+            case VISIBILITIES.SHARED: {
                 const [rows] = await promisePool.execute(queries.story.authenticated.shared, [userId, userId]);
                 return {rows}.rows;
             }
@@ -70,27 +71,13 @@ const addLike = async (params) => {
     await promisePool.execute("INSERT INTO story_like (user_id, story_id) VALUES (?, ?)", params);
 }
 
-const updateStory = async (id, req) => {
-    try {
-        const [rows] = await promisePool.execute('UPDATE story SET story_name = ?, story_description = ?, cover_photo = ?, visibility_id = ? WHERE story_id = ?;',
-            [req.body.storyName, req.body.storyDesc, req.body.storyCover, req.body.storyVisibility, id]);
-        console.log('storyModel update:', rows);
-        return rows.affectedRows === 1;
-    } catch (e) {
-        console.error('updateStory:', e.message);
-        throw new Error('updateStory failed');
-    }
+const updateStory = async (params) => {
+    const [result] = await promisePool.execute("UPDATE story SET story_name = ?, story_description = ?, visibility_id = ? WHERE story_id = ?", params)
+    return result.affectedRows === 1;
 };
 
-const deleteStory = async (id) => {
-    try {
-        console.log('storyModel deleteStory', id);
-        const [rows] = await promisePool.execute('DELETE FROM story WHERE story_id = ?', [id]);
-        return rows.affectedRows === 1;
-    } catch (e) {
-        console.error('deleteStory:', e.message);
-        throw new Error('deleteStory failed');
-    }
+const deleteStory = async (params) => {
+    await promisePool.execute("DELETE FROM story WHERE story_id = ?", params);
 };
 
 const addDocumentDetails = async (params) => {
@@ -114,7 +101,7 @@ const addComment = async (params) => {
 };
 
 const deleteComment = async (params) => {
-    return await promisePool.execute("DELETE FROM story_comment WHERE comment_id = ?", params);
+    await promisePool.execute("DELETE FROM story_comment WHERE comment_id = ?", params);
 };
 
 module.exports = {

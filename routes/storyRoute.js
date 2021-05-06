@@ -12,11 +12,11 @@ router.post("/new", storyValidator.validateStory, storyController.addStory);
 router.get("/:storyId/document/:documentId", storyController.checkStoryAccessRights, storyController.getDocument);
 
 router
-  .route("/like/:id")
-  .post(storyController.addLike);
+  .route("/like/:storyId")
+  .post(storyController.checkStoryAccessRights, storyController.addLike);
 
 router
-  .route("/upload/:id")
+  .route("/upload/:storyId")
   .post(storyController.storyOwnerAccessCheck, storyController.uploadDocument);
 
 router
@@ -29,8 +29,8 @@ router.delete("/comment/:commentId", storyController.deleteComment);
 router
   .route("/:storyId")
   .get(storyController.checkStoryAccessRights, storyController.getStory)
-  .put(storyController.checkStoryAccessRights, storyController.updateStory)
-  .delete(storyController.checkStoryAccessRights, storyController.deleteStory);
+  .patch(storyController.storyOwnerAccessCheck, storyValidator.validateStoryUpdate, storyController.updateStory)
+  .delete(storyController.deleteStory);
 
 router.get("/", storyController.getStories);
 
