@@ -7,7 +7,7 @@
             <div class="modal-content">
                 <div class="input-container">
                     <label for="sname">Story name</label>
-                    <input type="text" value="{{story.story_name}}">
+                    <input name="sname" type="text" value="{{story.story_name}}">
                 </div>
                 <div class="input-container">
                     <label for="sdescription">Story description</label>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="submit" value="Update">
-                    <button class="primary" type="button">Close</button>
+                    <button class="primary" type="button" onclick="closeStoryModal()">Close</button>
                 </div>
             </div>
         </form>

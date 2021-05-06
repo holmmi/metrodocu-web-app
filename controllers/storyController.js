@@ -10,7 +10,6 @@ const { getFormattedTimestamp } = require('../utils/time');
 
 const checkStoryAccessRights = async (req, res, next) => {
     try {
-        console.log(req.params.storyId);
         const visibilityInformation = await storyModel.getStoryVisibility(req.user ? req.user.user_id : 0, req.params.storyId);
         res.locals.storyOwner = req.user ? req.user.user_id === visibilityInformation.owner_id : false;
         if (visibilityInformation.visibility_id === VISIBILITIES.PUBLIC) {
@@ -36,11 +35,12 @@ const checkStoryAccessRights = async (req, res, next) => {
         return res.status(401).json({error: "Unauthorized"});
     } catch (error) {
         console.error("checkStoryAccessRights: ", error.message);
+        res.status(500).json({error: "Internal Server Error"});
     }
 };
 
 const storyOwnerAccessCheck = async (req, res, next) => {
-    const visibilityInformation = await storyModel.getStoryVisibility(req.user ? req.user.user_id : 0, req.params.id);
+    const visibilityInformation = await storyModel.getStoryVisibility(req.user ? req.user.user_id : 0, req.params.storyId);
     if (req.user) {
         if (req.user.user_id === visibilityInformation.owner_id) {
             return next();
@@ -66,6 +66,15 @@ const getStories = async (req, res) => {
         res.status(500).json({error: "Internal Server Error"});
     }
 };
+
+const getCover = (req, res) => {
+    res.download("uploads/covers/" + req.params.fileName, (err) => {
+        if (err) {
+            res.sendStatus(500);
+            console.error("getCover: ", err.message);
+        }
+    });
+}
 
 const getStory = async (req, res) => {
     try {
@@ -101,7 +110,7 @@ const addStory = async (req, res) => {
 const addLike = async (req, res) => {
     if (req.user) {
         try {
-            await storyModel.addLike([req.user.user_id, req.params.id]);
+            await storyModel.addLike([req.user.user_id, req.params.storyId]);
             res.sendStatus(200);
         } catch (error) {
             console.error(error.message);
@@ -113,18 +122,28 @@ const addLike = async (req, res) => {
 };
 
 const updateStory = async (req, res) => {
-    // Finds the validation errors in this request and wraps them in an object with handy functions
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()});
+    try {
+        const {sname, sdescription, svisibility} = req.body;
+        const updated = await storyModel.updateStory([sname, sdescription, svisibility, req.params.storyId]);
+        res.sendStatus(updated ? 200 : 400);
+    } catch (error) {
+        console.error("updateStory: ", error.message);
+        res.status(500).json({error: "Internal Server Error"});
     }
-    const updateOk = await storyModel.updateStory(req.params.id, req);
-    res.send(`updated... ${updateOk}`);
 };
 
 const deleteStory = async (req, res) => {
-    const deleteOk = await storyModel.deleteStory(req.params.id);
-    res.json(deleteOk);
+    if (req.user) {
+        if (req.user.groups.includes(GROUPS.ADMIN)) {
+            try {
+                await storyModel.deleteStory([req.params.storyId]);
+                return res.sendStatus(204);
+            } catch (error) {
+                console.error("deleteStory: ", error.message);
+            }
+        }
+    }
+    return res.status(401).json({ error: "Unauthorized" });
 };
 
 const uploadDocument = async (req, res) => {
@@ -138,9 +157,9 @@ const uploadDocument = async (req, res) => {
                     console.error(error);
                 }
             });
-            await storyModel.addDocumentDetails([file.name, file.type, fileName, req.params.id]);
-            res.sendStatus(200);
+            await storyModel.addDocumentDetails([file.name, file.type, fileName, req.params.storyId]);
         });
+        res.sendStatus(200);
     } catch (error) {
         console.error("uploadDocument: ", error.message);
         res.status(500).json({error: "Internal Server Error"});
@@ -165,7 +184,7 @@ const getDocument = async (req, res) => {
 const getComments = async (req, res) => {
     try {
         const response = {
-            admin: req.user.groups.includes(GROUPS.ADMIN),
+            admin: req.user ? req.user.groups.includes(GROUPS.ADMIN) : false,
             comments: await storyModel.getComments([req.params.storyId])
         };
         return res.json(response);
@@ -209,6 +228,7 @@ module.exports = {
     storyOwnerAccessCheck,
     visibility,
     getStories,
+    getCover,
     getStory,
     addStory,
     addLike,

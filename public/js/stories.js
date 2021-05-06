@@ -2,23 +2,23 @@
 
 let stories = null;
 
-const loadStories = async (visibilityId) => {
+const loadStories = async () => {
     try {
         const response = await fetch("/story?visibility=" + visibilities[selectedVisibility].visibility_id);
         const result = await response.json();
-        if (response.ok) {
-            const storyContainer = document.querySelector(".story-container");
-            storyContainer.innerHTML = "";
+        const storyContainer = document.querySelector(".story-container");
+        storyContainer.innerHTML = "";
+        if (response.ok) {  
             stories = result.map(story => {
                 return {...story, isLiked: story.isLiked > 0 ? true : false};
             });
-            stories.forEach((story, index) => {
+            stories.forEach((story) => {
                 const figure = document.createElement("figure");
                 figure.className = "story";
                 
                 const img = document.createElement("img");
                 img.alt = "Cover photo";
-                img.src = "/covers/" + story.cover_photo;
+                img.src = `/story/${story.story_id}/cover/${story.cover_photo}`;
                 figure.appendChild(img);
 
                 const figcaption = document.createElement("figcaption");
@@ -68,8 +68,11 @@ const loadStories = async (visibilityId) => {
 
                 storyContainer.appendChild(figure);
             });
-        } else {
-
+        }
+        if (!response.ok || result.length === 0) {
+            const h2 = document.createElement("h2");
+            h2.innerText = "There are no stories.";
+            storyContainer.appendChild(h2);
         }
     } catch (error) {
         console.error(error);

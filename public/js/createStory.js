@@ -1,5 +1,7 @@
 'use strict';
 
+const fileUpload = new FileUpload(["image/png", "image/gif", "image/jpg", "image/jpeg"], 1);
+
 const form = document.getElementById("create-story-form");
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -10,7 +12,7 @@ form.addEventListener("submit", async (event) => {
     formData.forEach((value, key) => {
         requestBody[key] = value;
     });
-    requestBody.files = files.filter(file => file);
+    requestBody.files = fileUpload.getFiles();
     try {
         const response = await fetch("/story/new", {
             method: "POST",
@@ -30,29 +32,11 @@ form.addEventListener("submit", async (event) => {
     }
 });
 
-const files = [];
-
 const uploadSection = document.querySelector(".upload-section");
     uploadSection.addEventListener("drop", async (event) => {
     event.preventDefault();
-    if (files.length < 1) {
-        const items = event.dataTransfer.items;
-        if (items) {
-            for (let i = 0; i < items.length; i++) {
-                if (items[i].kind === "file") {
-                    const file = items[i].getAsFile();
-                    if (file.type.startsWith("image")) {
-                        try {
-                            files.push({name: file.name, type: file.type, content: await getBase64EncodedString(file)});
-                            addFileToSection(file);
-                        } catch (error) {
-                            console.error(error);
-                        }
-                    }
-                }
-            }
-        }
-    }
+    const items = event.dataTransfer.items;
+    fileUpload.addFiles(items);
 });
 
 const filesInput = document.getElementById("files");
@@ -61,42 +45,30 @@ uploadSection.addEventListener("click", () => filesInput.click());
 
 filesInput.addEventListener("change", async () => {
     const fileList = this.files.files;
-    const file = fileList[fileList.length - 1];
-    try {
-        if (files.length < 1 && file.type.startsWith("image")) {
-            files.push({name: file.name, type: file.type, content: await getBase64EncodedString(file)});
-            addFileToSection(file);
-        }
-    } catch (error) {
-        console.error(error);
-    }
- }, false);
+    fileUpload.addFilesFromSelection(fileList);
+}, false);
 
- const getBase64EncodedString = (file) => {
-     return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.addEventListener("load", () => {
-                resolve(fileReader.result.split(",")[1]);
-            });
-            fileReader.addEventListener("error", () => {
-                reject(fileReader.error);
-            });
-     });
- }
-
- const addFileToSection = async file => {
+const addFileToSection = file => {
     const p = document.createElement("p");
     p.innerText = file.name;
     p.className = file.type.startsWith("image") ? "image-upload" : "document-upload";
     uploadSection.appendChild(p);
-    const paragraphs = document.querySelectorAll(".upload-section p");
-    paragraphs.forEach((paragraph, index) => {
-        paragraph.addEventListener("click", (event) => {
-            event.stopPropagation();
-            files.splice(index, 1);
-            uploadSection.removeChild(paragraph);
-        });
+    p.addEventListener("click", (event) => {
+      event.stopPropagation();
+      removeFileFromSection(p);
     });
     document.querySelector(".upload-instructions").style.display = "none";
- };
+};
+
+const removeFileFromSection = (target) => {
+    const paragraphs = document.querySelectorAll(".upload-section p");
+    paragraphs.forEach((paragraph, index) => {
+      if (paragraph === target) {
+        fileUpload.removeFile(index);
+        uploadSection.removeChild(paragraph);
+      }
+    });
+    if (paragraphs.length <= 1) {
+      document.querySelector(".upload-instructions").style.display = "block";
+    }
+}

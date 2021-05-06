@@ -598,9 +598,8 @@ table.primary th {
     text-transform: uppercase;
 }
 
-table.primary tbody > tr:hover {
+table.primary tbody > tr:nth-child(odd) {
     background-color: #F9AB55;
-    transition: 0.4s;
 }
 
 table a {
@@ -629,16 +628,16 @@ table a:hover {
 
 .story-statistics {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
     align-content: center;
-    flex: 50%;
 }
 
 .statistics-container {
-    flex-direction: row;
+    margin: 20px;
     text-align: center;
-    width: 50%;
+    flex-basis: calc(50% - 40px);
 }
 
 .statistics-container table {
