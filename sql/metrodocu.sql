@@ -60,7 +60,7 @@ CREATE TABLE story_document(
 ) WITH SYSTEM VERSIONING;
 
 CREATE TABLE story_share(
-    share_id INT PRIMARY KEY AUTO_INCREMENT,
+    share_id INT PRIMARY KEY AUTO_INCREMENT,-
     story_id INT NOT NULL,
     user_id INT NOT NULL,
 

@@ -10,7 +10,6 @@ const { checkLogin } = require('./controllers/authController');
 const viewRoute = require('./routes/viewRoute');
 const authRoute = require('./routes/authRoute');
 const storyRoute = require('./routes/storyRoute');
-const commentRoute = require('./routes/commentRoute');
 const statisticsRoute = require('./routes/statisticsRoute');
 
 const app = express();
@@ -36,7 +35,6 @@ app.use(checkLogin);
 // Configuration of routes
 app.use("/auth", authRoute);
 app.use("/story", storyRoute);
-app.use("/comment", commentRoute);
 app.use("/statistics", statisticsRoute);
 app.use(viewRoute);
 

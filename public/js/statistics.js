@@ -1,25 +1,13 @@
 'use strict';
 
-const topLikers = document.querySelector('.top-likers');
-const topCommenters = document.querySelector('.top-commenters');
-const topLiked = document.querySelector('.top-liked');
-const topCommented = document.querySelector('.top-commented');
-
-const getPublicStories = async () => {
-    try {
-        const response = await fetch("/story/visibility=" + 1);
-        const result = await response.json();
-    } catch (e) {
-        
-    }
-};
-
+const topLikers = document.querySelector('#top-likers');
+const topCommenters = document.querySelector('#top-commenters');
+const topLiked = document.querySelector('#top-liked');
+const topCommented = document.querySelector('#top-commented');
 
 const addUserLikes = (likes) => {
-    topLikers.innerHTML = `<tr>
-                                <th>User</th>
-                                <th>Likes</th>
-                            </tr>`;
+    topLikers.innerHTML = '';
+
     likes.forEach((like) => {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
@@ -33,10 +21,8 @@ const addUserLikes = (likes) => {
 };
 
 const addUserComments = (comments) => {
-    topCommenters.innerHTML = `<tr>
-                                <th>User</th>
-                                <th>Comments</th>
-                            </tr>`;
+    topCommenters.innerHTML = '';
+
     comments.forEach((comment) => {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
@@ -50,10 +36,8 @@ const addUserComments = (comments) => {
 };
 
 const addStoryLikes = (likes) => {
-    topLiked.innerHTML = `<tr>
-                                <th>Story</th>
-                                <th>Likes</th>
-                            </tr>`;
+    topLiked.innerHTML = '';
+
     likes.forEach((like) => {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
@@ -70,10 +54,8 @@ const addStoryLikes = (likes) => {
 };
 
 const addStoryComments = (comments) => {
-    topCommented.innerHTML = `<tr>
-                                <th>Story</th>
-                                <th>Comments</th>
-                            </tr>`;
+    topCommented.innerHTML = '';
+
     comments.forEach((comment) => {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
