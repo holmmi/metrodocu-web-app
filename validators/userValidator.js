@@ -26,8 +26,14 @@ const validateRegistration = [
         .withMessage("Username has to be five characters long.")
         .bail(),
     check("password")
-        .isStrongPassword()
-        .withMessage("Please choose a strong password."),
+        .isStrongPassword({
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1
+        })
+        .withMessage("Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one symbol and one number"),
     async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
