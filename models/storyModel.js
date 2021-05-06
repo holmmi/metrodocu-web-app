@@ -11,12 +11,10 @@ const getStoryVisibilities = async () => {
 
 const getStoryVisibility = async (userId, storyId) => {
     try {
-        console.log('getStoryVisibility (userId, storyId):',userId, storyId);
-        const [rows] = await promisePool.execute('SELECT a.visibility_id, a.owner_id, b.user_id FROM story a LEFT JOIN story_share b on b.user_id = ? WHERE a.story_id = ?;', [userId, storyId]);
+        const [rows] = await promisePool.execute('SELECT a.visibility_id, a.owner_id, b.user_id FROM story a LEFT JOIN story_share b on b.user_id = ? WHERE a.story_id = ?', [userId, storyId]);
         return rows[0];
     } catch (e) {
-        console.log('getStoryVisibility: ', e.message);
-        throw new Error('getStoryVisibility failed');
+        console.error('getStoryVisibility failed: ', e.message);
     }
 };
 
@@ -59,8 +57,8 @@ const getStoriesBySearchTerms = async (userId, query) => {
 };
 
 const getStoryById = async storyId => {
-    const [rows] = await promisePool.execute("SELECT s.story_id, story_name, story_description, cover_photo, creation_date, owner_id, COUNT(s.story_id) AS likecount FROM story AS s INNER JOIN story_like AS l ON s.story_id = l.story_id WHERE s.story_id = ?;", [storyId])
-    return rows[0];
+    const [rows] = await promisePool.execute(queries.story.storyDetails, [storyId]);
+    return rows;
 };
 
 const addStory = async details => {
@@ -95,6 +93,30 @@ const deleteStory = async (id) => {
     }
 };
 
+const addDocumentDetails = async (params) => {
+    const [rows] = await promisePool.execute("INSERT INTO story_document (document_name, document_mime, document_location, story_id) VALUES (?, ?, ?, ?)", params);
+    return rows.affectedRows === 1;
+};
+
+const getDocumentDetailsById = async (params) => {
+    const [rows] = await promisePool.execute("SELECT document_name, document_location FROM story_document WHERE document_id = ?", params);
+    return rows[0];
+}
+
+const getComments = async (params) => {
+    const [rows] = await promisePool.execute("SELECT c.comment_id, c.comment, u.username, DATE_FORMAT(c.created_at, '%Y-%m-%d %I:%i %p') AS time FROM story_comment c JOIN user u ON u.user_id = c.user_id WHERE c.story_id = ?", params);
+    return rows;
+}
+
+const addComment = async (params) => {
+    const [result] = await promisePool.execute("INSERT INTO story_comment (user_id, story_id, comment) VALUES (?, ?, ?)", params);
+    return result.insertId;
+};
+
+const deleteComment = async (params) => {
+    return await promisePool.execute("DELETE FROM story_comment WHERE comment_id = ?", params);
+};
+
 module.exports = {
     getStoryVisibility,
     getStoryVisibilities,
@@ -105,4 +127,9 @@ module.exports = {
     addLike,
     updateStory,
     deleteStory,
+    addDocumentDetails,
+    getDocumentDetailsById,
+    getComments,
+    addComment,
+    deleteComment
 };

@@ -9,6 +9,8 @@
             "shared": "SELECT a.*, (SELECT COUNT(*) FROM story_like WHERE story_id = a.story_id) AS likes, (SELECT COUNT(*) FROM story_like WHERE story_id = a.story_id AND user_id = ?) AS isLiked FROM story a JOIN story_share b ON b.story_id = a.story_id WHERE a.visibility_id = 3 AND b.user_id = ?"
         },
         "searchUnauthenticated": "SELECT s.story_id, s.story_name, s.story_description, s.creation_date, s.visibility_id, u.username FROM story s JOIN user u ON u.user_id = s.owner_id WHERE (s.story_name LIKE ? OR u.username LIKE ?) AND s.visibility_id != 2",
-        "searchAuthenticated": "SELECT s.story_id, s.story_name, s.story_description, s.creation_date, s.visibility_id, u.username, story_share.user_id FROM story s JOIN user u ON u.user_id = s.owner_id LEFT JOIN story_share ON story_share.user_id = ? WHERE (s.story_name LIKE ? OR u.username LIKE ?) AND s.visibility_id != 2"
+        "searchAuthenticated": "SELECT s.story_id, s.story_name, s.story_description, s.creation_date, s.visibility_id, u.username, story_share.user_id FROM story s JOIN user u ON u.user_id = s.owner_id LEFT JOIN story_share ON story_share.user_id = ? WHERE (s.story_name LIKE ? OR u.username LIKE ?) AND s.visibility_id != 2",
+        "storyDetails": "SELECT a.*, b.* FROM story a LEFT JOIN story_document b ON b.story_id = a.story_id WHERE a.story_id = ?",
+        "storyComments": "SELECT * FROM story_comment WHERE story_id = ? ORDER BY story_id ASC"
     }
 }

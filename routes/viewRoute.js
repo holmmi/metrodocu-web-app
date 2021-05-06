@@ -32,7 +32,7 @@ router.get("/stories/create-story", (req, res) => {
     }
 });
 
-router.get("/stories/:id", viewController.showStory);
+router.get("/stories/:id", viewController.checkStoryAccessRights, viewController.showStory);
 
 router.use((req, res, next) => {
     res.status(404).render("not-found", {

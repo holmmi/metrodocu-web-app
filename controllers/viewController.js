@@ -1,33 +1,57 @@
 'use strict';
+
 const storyModel = require('../models/storyModel');
+const VISIBILITIES = require('../constants/visibilities');
 
-const showStory = async (req, res, next) => {
-  console.log('showStory: http get story with path param', req.params);
-  const story = await storyModel.getStoryById(req.params.id);
-  const user = req.user ? true : false;
-  const userId = user ? req.user.user_id : 0;
-  const storyVisibility = story ? await storyModel.getStoryVisibility(userId,req.params.id) : false;
-
-  console.log("storyVisibility",storyVisibility);
-
-  if(!storyVisibility) {
-    notFound(req,res);
-  } else if(storyVisibility.visibility_id === 1) {
-    console.log("Story public");
-    renderStory(req,res,story);
-  } else if(storyVisibility.visibility_id === 2 && userId === storyVisibility.owner_id) {
-    console.log("Story owner access");
-    renderStory(req, res, story);
-  } else if(storyVisibility.visibility_id === 3 && storyVisibility.user_id === userId) {
-    console.log("Story shared access");
-    renderStory(req, res, story);
-  } else {
-    notFound(req,res);
+const checkStoryAccessRights = async (req, res, next) => {
+  const visibilityInformation = await storyModel.getStoryVisibility(req.user ? req.user.user_id : 0, req.params.id);
+  res.locals.storyOwner = req.user ? req.user.user_id === visibilityInformation.owner_id : false
+  if (visibilityInformation.visibility_id === VISIBILITIES.PUBLIC) {
+    return next();
   }
+  if (!req.user) {
+    return res.status(401).render("not-found")
+  }
+  switch (visibilityInformation.visibility_id) {
+    case VISIBILITIES.PRIVATE: {
+      if (res.locals.storyOwner) {
+        return next();
+      }
+      break;
+    }
+    case VISIBILITIES.SHARED: {
+      if (req.user.user_id === visibilityInformation.user_id) {
+        return next();
+      }
+      break;
+    }
+  }
+  return res.status(401).render("not-found");
 };
 
-const renderStory = (req, res, story) => {
-  console.log("showStory story:", story);
+const showStory = async (req, res) => {
+  const details = await storyModel.getStoryById(req.params.id);
+  const images = details
+                    .filter(detail => detail.document_mime ? detail.document_mime.startsWith("image") : false)
+                    .map(detail => {
+                      return {
+                        storyId: detail.story_id,
+                        documentId: detail.document_id, 
+                        name: detail.document_name,
+                        location: detail.document_location
+                      };
+                    });      
+  const documents = details
+                    .filter(detail => detail.document_mime ? !detail.document_mime.startsWith("image") : false)
+                    .map(detail => {
+                      return {
+                        storyId: detail.story_id,
+                        documentId: detail.document_id, 
+                        name: detail.document_name,
+                        location: detail.document_location
+                      };
+                    });
+  const story = details[0];
   const formattedDate = story.creation_date.toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -35,16 +59,12 @@ const renderStory = (req, res, story) => {
     day: "numeric"
   });
   res.render("story", {
+    loggedIn: req.user ? true : false,
+    owner: res.locals.storyOwner,
     story,
     formattedDate,
-    loggedIn: req.user ? true : false
-  });
-};
-
-const notFound = (req, res, next) => {
-
-  res.render("not-found", {
-    loggedIn: req.user ? true : false
+    images,
+    documents
   });
 };
 
@@ -77,7 +97,7 @@ const search = async (req, res) => {
 };
 
 module.exports = {
+    checkStoryAccessRights,
     search,
     showStory,
-    notFound
 };

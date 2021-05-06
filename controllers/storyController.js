@@ -1,7 +1,52 @@
 'use strict';
+
 const storyModel = require('../models/storyModel');
 const { makeCover } = require('../utils/resize');
 const { v4 } = require('uuid');
+const fs = require('fs');
+const VISIBILITIES = require('../constants/visibilities');
+const GROUPS = require('../constants/groups');
+const { getFormattedTimestamp } = require('../utils/time');
+
+const checkStoryAccessRights = async (req, res, next) => {
+    try {
+        const visibilityInformation = await storyModel.getStoryVisibility(req.user ? req.user.user_id : 0, req.params.storyId);
+        res.locals.storyOwner = req.user ? req.user.user_id === visibilityInformation.owner_id : false;
+        if (visibilityInformation.visibility_id === VISIBILITIES.PUBLIC) {
+            return next();
+        }
+        if (!req.user) {
+            return res.status(401).json({error: "Unauthorized"});
+        }
+        switch (visibilityInformation.visibility_id) {
+            case VISIBILITIES.PRIVATE: {
+                if (res.locals.storyOwner) {
+                    return next();
+                }
+                break;
+            }
+            case VISIBILITIES.SHARED: {
+                if (req.user.user_id === visibilityInformation.user_id) {
+                    return next();
+                }
+                break;
+            }
+        }
+        return res.status(401).json({error: "Unauthorized"});
+    } catch (error) {
+        console.error("checkStoryAccessRights: ", error.message);
+    }
+};
+
+const storyOwnerAccessCheck = async (req, res, next) => {
+    const visibilityInformation = await storyModel.getStoryVisibility(req.user ? req.user.user_id : 0, req.params.id);
+    if (req.user) {
+        if (req.user.user_id === visibilityInformation.owner_id) {
+            return next();
+        }
+    }
+    return res.status(401).json({error: "Unauthorized"});
+  };
 
 const visibility = async (req, res) => {
     try {
@@ -77,16 +122,86 @@ const deleteStory = async (req, res) => {
     res.json(deleteOk);
 };
 
-const likeStory = async (req, res, next) => {
-    if (req.user) {
-        await storyModel.likeStory(req.body.storyId, req.user.user_id);
-        next();
-    } else {
-        return res.status(401).json({error: "User not logged in"});
+const uploadDocument = async (req, res) => {
+    try {
+        const files = req.body;
+        files.forEach(async file => {
+            const buffer = Buffer.from(file.content, "base64");
+            const fileName = v4();
+            fs.writeFile("uploads/documents/" + fileName, buffer, (err) => {
+                if (err) {
+                    console.error(error);
+                }
+            });
+            await storyModel.addDocumentDetails([file.name, file.type, fileName, req.params.id]);
+            res.sendStatus(200);
+        });
+    } catch (error) {
+        console.error("uploadDocument: ", error.message);
+        res.status(500).json({error: "Internal Server Error"});
     }
 };
 
+const getDocument = async (req, res) => {
+    try {
+        const {document_name, document_location} = await storyModel.getDocumentDetailsById([req.params.documentId]);
+        res.download("uploads/documents/" + document_location, document_name, (err) => {
+            if (err) {
+                throw err.message;
+            }
+        });
+    } catch (error) {
+        console.error("getDocument: ", error.message);
+        res.sendStatus(500)
+    }
+    
+};
+
+const getComments = async (req, res) => {
+    try {
+        const response = {
+            admin: req.user.groups.includes(GROUPS.ADMIN),
+            comments: await storyModel.getComments([req.params.storyId])
+        };
+        return res.json(response);
+    } catch (error) {
+        console.error("getComments: ", error.message);
+    }
+};
+
+const addComment = async (req, res) => {
+    try {
+        const commentId = await storyModel.addComment([req.user.user_id, req.params.storyId, req.body.comment]);
+        res.status(200).json({
+            username: req.user.username,
+            admin: req.user.groups.includes(GROUPS.ADMIN),
+            commentId: commentId,
+            comment: req.body.comment,
+            time: getFormattedTimestamp()
+        });
+    } catch (error) {
+        console.error("addComment: ", error.message);
+        res.status(500).json({error: "Internal Server Error"});
+    }
+};
+
+const deleteComment = async (req, res) => {
+    if (req.user) {
+        if (req.user.groups.includes(GROUPS.ADMIN)) {
+            try {
+                await storyModel.deleteComment([req.params.commentId]);
+                return res.sendStatus(200);
+            } catch (error) {
+                console.error("deleteComment: ", error.message);
+                return res.status(500).json({error: "Internal Server Error"});
+            }
+        }
+    }
+    return res.status(401).json({error: "Unauthorized"});
+};
+
 module.exports = {
+    storyOwnerAccessCheck,
     visibility,
     getStories,
     getStory,
@@ -94,5 +209,10 @@ module.exports = {
     addLike,
     updateStory,
     deleteStory,
-    likeStory,
+    uploadDocument,
+    getDocument,
+    checkStoryAccessRights,
+    getComments,
+    addComment,
+    deleteComment,
 };

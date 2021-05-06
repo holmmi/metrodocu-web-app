@@ -1,102 +1,79 @@
 {{> navigation}}
-<style>
-    .documents {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-
-    tr:hover {
-        background-color: #F58A07;
-    }
-
-    tr.document { cursor: pointer; }
-
-    img {
-        width: 300px;
-    }
-
-    textarea[name="comment"] {
-        width: 500px;
-        height: 300px;
-        text-align: left;
-        vertical-align: top;
-    }
-</style>
 <main>
     <div class="container">
         <h1>{{story.story_name}}</h1>
         <p>Created: {{formattedDate}}</p>
-        <section>
-            <p>{{story.story_description}}</p>
-        </section>
-        <section class="photos">
-            <h2>Photos</h2>
-                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
-                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
-                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
-                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
-                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
-                <a href="/sample_pictures/300.jfif" data-lightbox="kitten" data-title="My caption"><img src="/sample_pictures/300.jfif"></a>
-        </section>
-        <section>
-            <h2>Documents</h2>
-        <table class="documents">
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Upload date</th>
-            </tr>
-            <tr>
-                <td>Jill</td>
-                <td>Smith</td>
-                <td>50</td>
-            </tr>
-            <tr class="document" data-href='https://google.fi/'>
-                <td>Jill</td>
-                <td>Smith</td>
-                <td>50</td>
-            </tr>
-            <tr class="document">
-                <td>Jill</td>
-                <td>Smith</td>
-                <td>50</td>
-            </tr>
-        </table>
-        </section>
-
-        <section>
-            <h2>Comments</h2>
-            {{#if loggedIn}}
-            <form id="addCommentForm">
-                <div class="input-container">
-                    <label for="comment">Comment</label>
-                    <textarea name="comment" maxlength="200"></textarea>
-                </div>
-                <div class = "input-container">
-                    <input type="submit" value="Send">
-                </div>
-
-            </form>
-            {{/if}}
-            <div class="comments">
-
+        <section class="main">
+            <div class="button-container">
+                {{#if owner}}
+                    <button class="primary" onclick="showStoryModal()">Update story</button>
+                {{/if}}
             </div>
+            <p class="medium">{{story.story_description}}</p>
+            <h2>Images</h2>
+            <section class="story-document">
+                {{#each images}}
+                    <figure class="story-image">
+                        <a href="/story/{{this.storyId}}/document/{{this.documentId}}" data-lightbox="story" data-title="{{this.name}}">
+                            <img src="/story/{{this.storyId}}/document/{{this.documentId}}" alt="Story images">
+                        </a>
+                    </figure>
+                {{else}}
+                    <p class="medium">There are no images in this section.</p>
+                {{/each}}
+            </section>
+            <h2>Documents</h2>
+            <section class="story-document">
+                {{#if (notEmpty documents)}}
+                    <table class="primary">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Created at</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each documents}}
+                                <tr>
+                                    <td><a href="/story/{{this.storyId}}/document/{{this.documentId}}">{{this.name}}</a></td>
+                                    <td>Date</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                {{^}}
+                    <p class="medium">There are no documents in this section.</p>
+                {{/if}}
+            </section>
+            {{#if owner}}
+                <h3>Upload</h3>
+                <section class="story-upload">
+                    <div class="upload-section">
+                        <div class="upload-instructions">Drag & Drop or select your files</div>
+                        <input type="file" id="files" name="files" multiple>
+                    </div>
+                    <button class="primary" onclick="uploadItems()">Upload</button>
+                </section>
+            {{/if}}
+            <section class="comment-section">
+                <h3>Comments</h3>
+                <div class="comments">
+                    <!-- Dynamic content -->
+                    {{#if loggedIn}}
+                        <div class="comment-input">
+                            <input name="comment" type="text" placeholder="Let the other people know what do you think">
+                            <button class="primary" onclick="addComment()">Send</button>
+                        </div>
+                    {{/if}}
+                </div>
+            </section>
         </section>
-
     </div>
 </main>
-<script src="/assets/lightbox2-2.11.3/dist/js/lightbox-plus-jquery.js"></script>
-<script src="/js/story.js"></script>
 {{> loginModal}}
+{{> storyModal}}
 {{> footer}}
+<script src="/assets/lightbox2-2.11.3/dist/js/lightbox-plus-jquery.js"></script>
+<script src="/js/storyVisibility.js"></script>
+<script src="/js/upload.js"></script>
+<script src="/js/story.js"></script>
