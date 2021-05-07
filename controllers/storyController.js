@@ -154,7 +154,7 @@ const uploadDocument = async (req, res) => {
             const fileName = v4();
             fs.writeFile("uploads/documents/" + fileName, buffer, (err) => {
                 if (err) {
-                    console.error(error);
+                    console.error(err);
                 }
             });
             await storyModel.addDocumentDetails([file.name, file.type, fileName, req.params.storyId]);
@@ -171,7 +171,7 @@ const getDocument = async (req, res) => {
         const {document_name, document_location} = await storyModel.getDocumentDetailsById([req.params.documentId]);
         res.download("uploads/documents/" + document_location, document_name, (err) => {
             if (err) {
-                throw err.message;
+                console.error(err);
             }
         });
     } catch (error) {
